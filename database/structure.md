@@ -9,7 +9,7 @@
 | modified_at      | DATETIME     | NO   | -       | -                         | date de modification                    |
 | title            | VARCHAR(255) | NO   | UNIQUE  | -                         | Titre de l'article                      |
 | slug             | VARCHAR(255) | NO   | UNIQUE  | -                         | URL de la page de l'article             |
-| coverimg_id      | VARCHAR(255) | YES  | -       | -                         | URL de l'image de couverture            |
+| image_id         | SMALLINT     | YES  | -       | -                         | id de l'image de couverture             |
 | content          | TEXT         | YES  | -       | -                         | Contenu de l'article en Markdown        |
 | draft            | tinyint(1)   | NO   | -       | -                         | 0 ou 1 : en mode brouillon ou pas ?     |
 
