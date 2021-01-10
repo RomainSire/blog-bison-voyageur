@@ -1,2 +1,7 @@
+# Notes:
 TODO.md
+
+# Backend:
 backend/node_modules
+backend/.env
+backend/access.log
