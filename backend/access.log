@@ -1,0 +1,2 @@
+::1 - - [10/Jan/2021:11:36:20 +0000] "GET /api/toto/ HTTP/1.1" 200 23 "-" "PostmanRuntime/7.26.8"
+::ffff:127.0.0.1 - - [10/Jan/2021:11:38:43 +0000] "GET /api/toto HTTP/1.1" 200 23 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:84.0) Gecko/20100101 Firefox/84.0"
