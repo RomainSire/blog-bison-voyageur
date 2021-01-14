@@ -4,8 +4,8 @@
 So, I have a travel blog (that I'm taking way too long to update..!). I made it several years ago, and at the time I chose Wordpress to manage it. It was the fastest and easiest solution.  
 However now, I learned how to code, and I want to develop my own small blog CMS with:
 - Node.Js/Express REST API as a backend
-- MySQL database (with Sequelize as ORM)
-- Single page application developed with Angular for the frontend
+- MongoDB as database (I don't think there will be many relations in the database, so...)
+- Single page application (I'm still not sure if I will use Angular or Vue)
 
 ## Features
 ### Must-have features

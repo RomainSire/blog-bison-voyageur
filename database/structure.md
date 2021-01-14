@@ -1,6 +1,25 @@
 # Structure de la base de données
 
-## Article
+> **:warning: la BDD était initialement conçue pour MySQL, mais finalement *MongoDB* sera plus adapté.**  
+
+## password
+
+1 seul utilisateur = 1 seul mot de passe, mais je veux l'option pour changer son mot de passe  
+Par défaut, la base de données sera construite avec le mot de passe "admin" mais l'admin devra changer son mot de passe à sa première utilisation  
+
+| Field            | Type         | Null | Key     | Autre Attributs           | Description                             |
+| ---------------- | ------------ | ---- | ------- | ------------------------- | --------------------------------------- |
+| id               | TINYINT      | NO   | PRIMARY | auto_increment ; unsigned |                                         |
+| created_at       | DATETIME     | NO   | -       | -                         | date de création                        |
+| modified_at      | DATETIME     | NO   | -       | -                         | date de modification                    |
+| email            | VARCHAR(255) | NO   | UNIQUE  | -                         | Email de l'utilisateur (crypté)         |
+| hash             | VARCHAR(255) | NO   | -       | -                         | Hash du mot de passe                    |
+
+> **Notes :**  
+> id : TINYINT unsigned = 255 menus  
+
+
+## article
 
 | Field            | Type         | Null | Key     | Autre Attributs           | Description                             |
 | ---------------- | ------------ | ---- | ------- | ------------------------- | --------------------------------------- |
@@ -20,7 +39,7 @@
 > content : TEXT = 65,535 caractères
 
 
-## Image
+## image
 
 | Field            | Type         | Null | Key     | Autre Attributs           | Description                             |
 | ---------------- | ------------ | ---- | ------- | ------------------------- | --------------------------------------- |
@@ -35,7 +54,8 @@
 > title & slug = unique  
 
 
-## Menu
+## menu
+A implémenter plus tard... pas sûr que ça fonctionne !
 Idée pour éditer les menus directement dans le CMS : passer par du JSON:
 ```json
 {
