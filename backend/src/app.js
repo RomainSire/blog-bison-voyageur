@@ -11,7 +11,7 @@ const helmet = require('helmet');
 const mongoose = require('mongoose');
 
 // import routes
-const testRoutes = require('./routes/test');
+const articleRoutes = require('./routes/article');
 
 // Lancement de Express
 const app = express();
@@ -19,11 +19,12 @@ const app = express();
 /**
  * CONNEXION BDD
  */
-mongoose.connect(process.env.MONGODB_PATH_PROD,
-  { useNewUrlParser: true,
-    useUnifiedTopology: true })
-  .then(() => console.log('Connexion à MongoDB réussie !'))
-  .catch(() => console.log('Connexion à MongoDB échouée !'));
+  mongoose.connect(process.env.MONGODB_PATH_PROD,
+    { useNewUrlParser: true,
+      useCreateIndex: true,
+      useUnifiedTopology: true})
+    .then(() => console.log('Connexion à MongoDB réussie !'))
+    .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 /**
  * MIDDLEWARES
@@ -48,6 +49,6 @@ app.use(morgan('combined', { stream: accessLogStream }));
  * ROUTES
  */
 app.use('/images', express.static(path.join(__dirname, '../images')));
-app.use('/api/test', testRoutes);
+app.use('/api/article', articleRoutes);
 
 module.exports = app;
