@@ -1,5 +1,5 @@
 /**
- * IMPORTS & ENV
+ * IMPORTS
  */
 require('dotenv').config();
 const express = require('express');
@@ -8,6 +8,7 @@ const path = require('path');
 const fs = require('fs');
 const morgan = require('morgan');
 const helmet = require('helmet');
+const mongoose = require('mongoose');
 
 // import routes
 const testRoutes = require('./routes/test');
@@ -16,11 +17,20 @@ const testRoutes = require('./routes/test');
 const app = express();
 
 /**
+ * CONNEXION BDD
+ */
+mongoose.connect(process.env.MONGODB_PATH_PROD,
+  { useNewUrlParser: true,
+    useUnifiedTopology: true })
+  .then(() => console.log('Connexion à MongoDB réussie !'))
+  .catch(() => console.log('Connexion à MongoDB échouée !'));
+
+/**
  * MIDDLEWARES
  */
 // CORS: Configuration cors
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', process.env.CORS_ALLOWED_ORIGINS);
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   res.setHeader('Access-Control-Allow-Credentials', true);

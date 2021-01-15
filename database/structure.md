@@ -30,7 +30,7 @@ Par défaut, la base de données sera construite avec le mot de passe "admin" ma
 | slug             | VARCHAR(255) | NO   | UNIQUE  | -                         | URL de la page de l'article             |
 | image_id         | SMALLINT     | YES  | -       | -                         | id de l'image de couverture             |
 | content          | TEXT         | YES  | -       | -                         | Contenu de l'article en Markdown        |
-| draft            | tinyint(1)   | NO   | -       | -                         | 0 ou 1 : en mode brouillon ou pas ?     |
+| isdraft          | tinyint(1)   | NO   | -       | -                         | 0 ou 1 : en mode brouillon ou pas ?     |
 
 > **Notes :**  
 > id : SMALLINT unsigned = 65 534 articles  

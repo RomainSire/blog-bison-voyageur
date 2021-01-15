@@ -4,6 +4,7 @@ TODO.md
 # Backend:
 backend/node_modules
 backend/.env
+backend/config
 backend/access.log
 backend/images
 backend/package-lock.json
