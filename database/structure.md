@@ -21,16 +21,17 @@ Par défaut, la base de données sera construite avec le mot de passe "admin" ma
 
 ## article
 
-| Field            | Type         | Null | Key     | Autre Attributs           | Description                             |
-| ---------------- | ------------ | ---- | ------- | ------------------------- | --------------------------------------- |
-| id               | SMALLINT     | NO   | PRIMARY | auto_increment ; unsigned |                                         |
-| created_at       | DATETIME     | NO   | -       | -                         | date de création                        |
-| modified_at      | DATETIME     | NO   | -       | -                         | date de modification                    |
-| title            | VARCHAR(255) | NO   | UNIQUE  | -                         | Titre de l'article                      |
-| slug             | VARCHAR(255) | NO   | UNIQUE  | -                         | URL de la page de l'article             |
-| image_id         | SMALLINT     | YES  | -       | -                         | id de l'image de couverture             |
-| content          | TEXT         | YES  | -       | -                         | Contenu de l'article en Markdown        |
-| isdraft          | tinyint(1)   | NO   | -       | -                         | 0 ou 1 : en mode brouillon ou pas ?     |
+| Field            | Type         | Null | Key     | Autre Attributs           | Description                               |
+| ---------------- | ------------ | ---- | ------- | ------------------------- | ----------------------------------------- |
+| id               | SMALLINT     | NO   | PRIMARY | auto_increment ; unsigned |                                           |
+| created_at       | DATETIME     | NO   | -       | -                         | date de création                          |
+| modified_at      | DATETIME     | NO   | -       | -                         | date de modification                      |
+| title            | VARCHAR(255) | NO   | UNIQUE  | -                         | Titre de l'article                        |
+| slug             | VARCHAR(255) | NO   | UNIQUE  | -                         | URL de la page de l'article               |
+| description      | VARCHAR(255) | YES  | -       | -                         | Résumé de l'article (pour SEO et preview) |
+| image_id         | SMALLINT     | YES  | -       | -                         | id de l'image de couverture               |
+| content          | TEXT         | YES  | -       | -                         | Contenu de l'article en Markdown          |
+| isdraft          | tinyint(1)   | NO   | -       | -                         | 0 ou 1 : en mode brouillon ou pas ?       |
 
 > **Notes :**  
 > id : SMALLINT unsigned = 65 534 articles  

@@ -7,6 +7,7 @@ const articleSchema = mongoose.Schema({
   modified_at: { type: Date, required: true },
   title: { type: String, required: true, unique: true },
   slug: { type: String, required: true, unique: true },
+  description: { type: String, required: false },
   image_id: { type: Number, required: false },
   content: { type: String, required: false },
   isdraft: { type: Boolean, required: true }

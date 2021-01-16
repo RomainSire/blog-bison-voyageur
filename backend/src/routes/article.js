@@ -5,9 +5,9 @@ const router = express.Router();
 const articleCtrl = require('../controllers/article');
 
 router.get('/', articleCtrl.getAllArticles);
-router.get('/:id', articleCtrl.getOneArticle);
+router.get('/:slug', articleCtrl.getOneArticle);
 router.post('/', articleCtrl.addArticle);
-router.put('/:id', articleCtrl.updateArticle);
-router.delete('/:id', articleCtrl.deleteArticle);
+router.put('/:slug', articleCtrl.updateArticle);
+router.delete('/:slug', articleCtrl.deleteArticle);
 
 module.exports = router;
