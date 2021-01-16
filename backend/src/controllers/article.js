@@ -17,3 +17,9 @@ exports.getAllArticles = (req, res, next) => {
     .then(articles => res.status(200).json(articles))
     .catch(error => res.status(400).json({ error }));
 }
+
+exports.getOneArticle = (req, res, next) => {
+  Article.findOne({_id: req.params.id})
+    .then(article => res.status(200).json(article))
+    .catch(error => res.status(404).json({ error }));
+}
