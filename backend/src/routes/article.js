@@ -7,5 +7,6 @@ const articleCtrl = require('../controllers/article');
 router.get('/', articleCtrl.getAllArticles);
 router.get('/:id', articleCtrl.getOneArticle);
 router.post('/', articleCtrl.addArticle);
+router.put('/:id', articleCtrl.updateArticle);
 
 module.exports = router;
