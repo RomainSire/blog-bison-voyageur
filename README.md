@@ -1,6 +1,6 @@
 # Blog Bison Voyageur
 
-<p align='center'><strong>:warning: :construction: WORK IN PROGRESS :construction: :warning:</strong></p>
+<h3 align='center'><strong>:warning: :construction: WORK IN PROGRESS :construction: :warning:</strong></h3>
 
 ## Goals and used technology
 
