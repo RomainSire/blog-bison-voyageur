@@ -19,12 +19,10 @@ const app = express();
 /**
  * CONNEXION BDD
  */
-  mongoose.connect(process.env.MONGODB_PATH_PROD,
-    { useNewUrlParser: true,
-      useCreateIndex: true,
-      useUnifiedTopology: true})
-    .then(() => console.log('Connexion à MongoDB réussie !'))
-    .catch(() => console.log('Connexion à MongoDB échouée !'));
+const dbPath = process.env.NODE_ENV === 'test' ? process.env.MONGODB_PATH_TEST : process.env.MONGODB_PATH_PROD;
+mongoose.connect(dbPath, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true})
+  .then(() => console.log('Connexion à MongoDB réussie !'))
+  .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 /**
  * MIDDLEWARES
@@ -41,9 +39,11 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 // HELMET: Sécurisation des headers
 app.use(helmet());
-// MORGAN: Log toutes les requêtes passées au serveur
-const accessLogStream = fs.createWriteStream(path.join(__dirname, '../access.log'), { flags: 'a' });
-app.use(morgan('combined', { stream: accessLogStream }));
+// MORGAN: Log toutes les requêtes passées au serveur (Désactivé lors des tests)
+if (process.env.NODE_ENV !== 'test') {
+  const accessLogStream = fs.createWriteStream(path.join(__dirname, '../access.log'), { flags: 'a' });
+  app.use(morgan('combined', { stream: accessLogStream }));
+}
 
 /**
  * ROUTES
