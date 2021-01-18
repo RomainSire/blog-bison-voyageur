@@ -1,5 +1,7 @@
 # Blog Bison Voyageur
 
+# :warning: :construction: WORK IN PROGRESS :construction: :warning:
+
 ## Goals and used technology
 So, I have a travel blog (that I'm taking way too long to update..!). I made it several years ago, and at the time I chose Wordpress to manage it. It was the fastest and easiest solution.  
 However now, I learned how to code, and I want to develop my own small blog CMS with:

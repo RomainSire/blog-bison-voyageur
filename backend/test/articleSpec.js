@@ -14,9 +14,9 @@ const Article = require('../src/models/Article');
 
 describe('Article', () => {
   /**
-   * Test the /get route
+   * Test the GET /api/article route
    */
-  describe('/GET/article', () => {
+  describe('GET /api/article', () => {
     // DELETE EVERYTHING FROM THE TEST DATABASE
     before((done) => {
       Article.deleteMany({}, (err) => {
@@ -37,9 +37,9 @@ describe('Article', () => {
   });
 
   /**
-   * Test the /post route
+   * Test the POST /api/article route
    */
-  describe('/POST/article', () => {
+  describe('POST /api/article', () => {
     // DELETE EVERYTHING FROM THE TEST DATABASE
     before((done) => {
       Article.deleteMany({}, (err) => {
@@ -227,5 +227,12 @@ describe('Article', () => {
         });
     });
   })
+
+  /**
+   * Test the GET /api/article/:id route
+   */
+  describe('GET /api/article/:id', () => {
+    
+  });
 
 });
