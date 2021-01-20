@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "mocha",
+    "nyan": "mocha -R nyan",
     "start": "nodemon src/server"
   },
   "author": "",

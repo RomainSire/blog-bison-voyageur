@@ -3,7 +3,6 @@ process.env.NODE_ENV = 'test';
 
 // imports
 const mongoose = require("mongoose");
-
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 chai.should();
@@ -227,7 +226,7 @@ describe('Article', () => {
    * Test the GET /api/article route
    **************************************************************************/
   describe('GET /api/article', () => {
-    it('should GET 0 articles if DB empty', (done) => {
+    it('should GET no articles if DB empty', (done) => {
       chai.request(app)
         .get('/api/article')
         .end((err, res) => {
