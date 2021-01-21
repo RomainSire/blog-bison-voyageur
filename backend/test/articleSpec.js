@@ -340,7 +340,7 @@ describe('Article', () => {
           });
         })
     });
-    it('should GET no article if the slug is wrong', (done) => {
+    it('should GET no article if the slug doesn\'t exixt', (done) => {
       const now = new Date();
       const article = new Article({
         title: "Voyage au Japon",
@@ -520,6 +520,34 @@ describe('Article', () => {
                 done();
               });
             })
+        })
+    });
+    it('should return an error if ID doesn\'t exixt', (done) => {
+      const now = new Date();
+      const article = new Article({
+        title: "Voyage au Japon",
+        slug: "tdm-japon",
+        image_id: 2,
+        description: "Une courte description de l'article",
+        content: "Le contenu super intéressant de l'article : ce voyage était hyper stylé, on s'est régalée :)",
+        isdraft: true,
+        created_at: now,
+        modified_at: now
+      });
+      article.save()
+        .then(() => {
+          const articleModified = {
+            content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          };
+          chai.request(app)
+          .put('/api/article/12')
+          .send(articleModified)
+          .end((err, res) => {
+            res.should.have.status(400);
+            res.body.should.be.a('object');
+            res.body.should.have.property('error');
+            done();
+          });
         })
     });
   })
