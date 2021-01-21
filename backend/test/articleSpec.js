@@ -180,7 +180,7 @@ describe('Article', () => {
             res.body.error.errors.title.should.have.property('kind').eql('unique');
             done();
           });
-        })
+        });
     });
     it('should not POST an article if slug already exists', (done) => {
       const now = new Date();
@@ -216,9 +216,8 @@ describe('Article', () => {
               res.body.error.errors.slug.should.have.property('kind').eql('unique');
               done();
             });
-        })
+        });
     });
-    
   })
 
 
@@ -287,8 +286,8 @@ describe('Article', () => {
                 res.body.articles[1].should.not.have.property('content');
                 done();
               });
-            })
-        })
+            });
+        });
     });
   });
 
@@ -338,7 +337,7 @@ describe('Article', () => {
             res.body.article.should.have.property('modified_at');
             done();
           });
-        })
+        });
     });
     it('should GET no article if the slug doesn\'t exixt', (done) => {
       const now = new Date();
@@ -362,7 +361,7 @@ describe('Article', () => {
             res.body.should.have.property('article').eql(null);
             done();
           });
-        })
+        });
     });
   });
 
@@ -402,7 +401,7 @@ describe('Article', () => {
             res.body.should.have.property('message').eql('Article modifié');
             done();
           });
-        })
+        });
     });
     it('should MODIFY an article by the given id, even with partial info', (done) => {
       const now = new Date();
@@ -430,7 +429,7 @@ describe('Article', () => {
             res.body.should.have.property('message').eql('Article modifié');
             done();
           });
-        })
+        });
     });
     it('should not MODIFY an article if another one have the same title', (done) => {
       const now = new Date();
@@ -474,8 +473,8 @@ describe('Article', () => {
                 res.body.error.keyValue.should.have.property('title');
                 done();
               });
-            })
-        })
+            });
+        });
     });
     it('should not MODIFY an article if another one have the same slug', (done) => {
       const now = new Date();
@@ -519,8 +518,8 @@ describe('Article', () => {
                 res.body.error.keyValue.should.have.property('slug');
                 done();
               });
-            })
-        })
+            });
+        });
     });
     it('should return an error if ID doesn\'t exixt', (done) => {
       const now = new Date();
@@ -548,7 +547,62 @@ describe('Article', () => {
             res.body.should.have.property('error');
             done();
           });
-        })
+        });
     });
-  })
+  });
+
+
+  /**************************************************************************
+   * Test the DELETE /api/article/:id route
+   **************************************************************************/
+  describe('DELETE /api/article/:id', () => {
+    it('should DELETE an article by the given id', (done) => {
+      const now = new Date();
+      const article = new Article({
+        title: "Voyage au Japon",
+        slug: "tdm-japon",
+        image_id: 2,
+        description: "Une courte description de l'article",
+        content: "Le contenu super intéressant de l'article : ce voyage était hyper stylé, on s'est régalée :)",
+        isdraft: true,
+        created_at: now,
+        modified_at: now
+      });
+      article.save()
+        .then(savedArticle => {
+          chai.request(app)
+          .delete('/api/article/' + savedArticle._id)
+          .end((err, res) => {
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.should.have.property('message').eql('Article supprimé');
+            done();
+          });
+        });
+    });
+    it('should return an error if the id doesn\'t exixt', (done) => {
+      const now = new Date();
+      const article = new Article({
+        title: "Voyage au Japon",
+        slug: "tdm-japon",
+        image_id: 2,
+        description: "Une courte description de l'article",
+        content: "Le contenu super intéressant de l'article : ce voyage était hyper stylé, on s'est régalée :)",
+        isdraft: true,
+        created_at: now,
+        modified_at: now
+      });
+      article.save()
+        .then(savedArticle => {
+          chai.request(app)
+          .delete('/api/article/12')
+          .end((err, res) => {
+            res.should.have.status(400);
+            res.body.should.be.a('object');
+            res.body.should.have.property('error');
+            done();
+          });
+        });
+    });
+  });
 });
