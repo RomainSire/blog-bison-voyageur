@@ -26,13 +26,13 @@ exports.getOneArticle = (req, res, next) => {
 
 exports.updateArticle = (req, res, next) => {
   const now = new Date();
-  Article.updateOne({slug: req.params.slug}, {...req.body, modified_at: now})
-    .then(() => res.status(201).json({message: 'Article modifié' }))
+  Article.updateOne({_id: req.params.id}, {...req.body, modified_at: now})
+    .then(() => res.status(201).json({ message: 'Article modifié' }))
     .catch(error => res.status(400).json({ error }));
 }
 
 exports.deleteArticle = (req, res, next) => {
-  Article.deleteOne({slug: req.params.slug})
+  Article.deleteOne({_id: req.params.id})
     .then(() => res.status(200).json({ message: 'Article supprimé' }))
     .catch(error => res.status(400).json({ error }));
 }
