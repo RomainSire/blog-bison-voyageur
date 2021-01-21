@@ -302,11 +302,11 @@ describe('Article', () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.be.a('object');
-          res.body.should.have.property('article').eql(null)
+          res.body.should.have.property('article').eql(null);
           done();
         });
     });
-    it('should GET a book by the given slug', (done) => {
+    it('should GET an article by the given slug', (done) => {
       const now = new Date();
       const article = new Article({
         title: "Voyage au Japon",
@@ -339,6 +339,188 @@ describe('Article', () => {
             done();
           });
         })
+    });
+    it('should GET no article if the slug is wrong', (done) => {
+      const now = new Date();
+      const article = new Article({
+        title: "Voyage au Japon",
+        slug: "tdm-japon",
+        image_id: 2,
+        description: "Une courte description de l'article",
+        content: "Le contenu super intéressant de l'article : ce voyage était hyper stylé, on s'est régalée :)",
+        isdraft: false,
+        created_at: now,
+        modified_at: now
+      });
+      article.save()
+        .then(() => {
+          chai.request(app)
+          .get('/api/article/' + 'autre-slug')
+          .end((err, res) => {
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.should.have.property('article').eql(null);
+            done();
+          });
+        })
+    });
   });
-  });
+
+
+  /**************************************************************************
+   * Test the PUT /api/article/:id route
+   **************************************************************************/
+  describe('PUT /api/article/:id', () => {
+    it('should MODIFY an article by the given id', (done) => {
+      const now = new Date();
+      const article = new Article({
+        title: "Voyage au Japon",
+        slug: "tdm-japon",
+        image_id: 2,
+        description: "Une courte description de l'article",
+        content: "Le contenu super intéressant de l'article : ce voyage était hyper stylé, on s'est régalée :)",
+        isdraft: true,
+        created_at: now,
+        modified_at: now
+      });
+      article.save()
+        .then(savedArticle => {
+          const articleModified = {
+            title: "Voyage au Japon",
+            slug: "tdm-japon",
+            image_id: 12,
+            description: "description article",
+            content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vestibulum a urna quis elementum. Aliquam ullamcorper, massa vel rutrum semper, ex tellus maximus arcu, ut convallis nibh erat id risus. Proin a mi nisi. Phasellus vel elit vel odio commodo fermentum at ullamcorper sapien. Duis nunc diam, iaculis ut tempor eu, gravida ut odio. Vestibulum cursus dolor sed maximus ultrices. Maecenas vehicula convallis neque, ut iaculis odio volutpat ut. Phasellus dapibus egestas nibh, eget imperdiet diam sodales at. Nam eget velit non augue tristique sagittis ac ac orci.",
+            isdraft: false
+          };
+          chai.request(app)
+          .put('/api/article/' + savedArticle._id)
+          .send(articleModified)
+          .end((err, res) => {
+            res.should.have.status(201);
+            res.body.should.be.a('object');
+            res.body.should.have.property('message').eql('Article modifié');
+            done();
+          });
+        })
+    });
+    it('should MODIFY an article by the given id, even with partial info', (done) => {
+      const now = new Date();
+      const article = new Article({
+        title: "Voyage au Japon",
+        slug: "tdm-japon",
+        image_id: 2,
+        description: "Une courte description de l'article",
+        content: "Le contenu super intéressant de l'article : ce voyage était hyper stylé, on s'est régalée :)",
+        isdraft: true,
+        created_at: now,
+        modified_at: now
+      });
+      article.save()
+        .then(savedArticle => {
+          const articleModified = {
+            content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vestibulum a urna quis elementum. Aliquam ullamcorper, massa vel rutrum semper, ex tellus maximus arcu, ut convallis nibh erat id risus. Proin a mi nisi. Phasellus vel elit vel odio commodo fermentum at ullamcorper sapien. Duis nunc diam, iaculis ut tempor eu, gravida ut odio. Vestibulum cursus dolor sed maximus ultrices. Maecenas vehicula convallis neque, ut iaculis odio volutpat ut. Phasellus dapibus egestas nibh, eget imperdiet diam sodales at. Nam eget velit non augue tristique sagittis ac ac orci."
+          };
+          chai.request(app)
+          .put('/api/article/' + savedArticle._id)
+          .send(articleModified)
+          .end((err, res) => {
+            res.should.have.status(201);
+            res.body.should.be.a('object');
+            res.body.should.have.property('message').eql('Article modifié');
+            done();
+          });
+        })
+    });
+    it('should not MODIFY an article if another one have the same title', (done) => {
+      const now = new Date();
+      const article1 = new Article({
+        title: "Voyage au Japon",
+        slug: "tdm-japon",
+        image_id: 2,
+        description: "Une courte description de l'article",
+        content: "Le contenu super intéressant de l'article : ce voyage était hyper stylé, on s'est régalée :)",
+        isdraft: true,
+        created_at: now,
+        modified_at: now
+      });
+      article1.save()
+        .then(() => {
+          const article2 = new Article({
+            title: "Voyage au Pérou",
+            slug: "tdm-perou",
+            image_id: 12,
+            description: "description de article",
+            content: "contenu article",
+            isdraft: true,
+            created_at: now,
+            modified_at: now
+          });
+          article2.save()
+            .then(savedArticle => {
+              const article2modified = {
+                title: "Voyage au Japon",
+              }
+              chai.request(app)
+              .put('/api/article/' + savedArticle._id)
+              .send(article2modified)
+              .end((err, res) => {
+                res.should.have.status(400);
+                res.body.should.be.a('object');
+                res.body.should.have.property('error');
+                res.body.error.should.be.a('object');
+                res.body.error.should.have.property('keyValue');
+                res.body.error.keyValue.should.be.a('object');
+                res.body.error.keyValue.should.have.property('title');
+                done();
+              });
+            })
+        })
+    });
+    it('should not MODIFY an article if another one have the same slug', (done) => {
+      const now = new Date();
+      const article1 = new Article({
+        title: "Voyage au Japon",
+        slug: "tdm-japon",
+        image_id: 2,
+        description: "Une courte description de l'article",
+        content: "Le contenu super intéressant de l'article : ce voyage était hyper stylé, on s'est régalée :)",
+        isdraft: true,
+        created_at: now,
+        modified_at: now
+      });
+      article1.save()
+        .then(() => {
+          const article2 = new Article({
+            title: "Voyage au Pérou",
+            slug: "tdm-perou",
+            image_id: 12,
+            description: "description de article",
+            content: "contenu article",
+            isdraft: true,
+            created_at: now,
+            modified_at: now
+          });
+          article2.save()
+            .then(savedArticle => {
+              const article2modified = {
+                slug: "tdm-japon",
+              }
+              chai.request(app)
+              .put('/api/article/' + savedArticle._id)
+              .send(article2modified)
+              .end((err, res) => {
+                res.should.have.status(400);
+                res.body.should.be.a('object');
+                res.body.should.have.property('error');
+                res.body.error.should.be.a('object');
+                res.body.error.should.have.property('keyValue');
+                res.body.error.keyValue.should.be.a('object');
+                res.body.error.keyValue.should.have.property('slug');
+                done();
+              });
+            })
+        })
+    });
+  })
 });
