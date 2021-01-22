@@ -12,6 +12,7 @@ const mongoose = require('mongoose');
 
 // import routes
 const articleRoutes = require('./routes/article');
+const userRoutes = require('./routes/user');
 
 // Lancement de Express
 const app = express();
@@ -50,5 +51,6 @@ if (process.env.NODE_ENV !== 'test') {
  */
 app.use('/images', express.static(path.join(__dirname, '../images')));
 app.use('/api/article', articleRoutes);
+app.use('/api/auth', userRoutes);
 
 module.exports = app;

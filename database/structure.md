@@ -2,9 +2,8 @@
 
 > **:warning: la BDD était initialement conçue pour MySQL, mais finalement *MongoDB* sera plus adapté.**  
 
-## password
+## user
 
-1 seul utilisateur = 1 seul mot de passe, mais je veux l'option pour changer son mot de passe  
 Par défaut, la base de données sera construite avec le mot de passe "admin" mais l'admin devra changer son mot de passe à sa première utilisation  
 
 | Field            | Type         | Null | Key     | Autre Attributs           | Description                             |
@@ -12,7 +11,7 @@ Par défaut, la base de données sera construite avec le mot de passe "admin" ma
 | id               | TINYINT      | NO   | PRIMARY | auto_increment ; unsigned |                                         |
 | created_at       | DATETIME     | NO   | -       | -                         | date de création                        |
 | modified_at      | DATETIME     | NO   | -       | -                         | date de modification                    |
-| email            | VARCHAR(255) | NO   | UNIQUE  | -                         | Email de l'utilisateur (crypté)         |
+| username         | VARCHAR(255) | NO   | UNIQUE  | -                         | Email de l'utilisateur (crypté)         |
 | hash             | VARCHAR(255) | NO   | -       | -                         | Hash du mot de passe                    |
 
 > **Notes :**  
