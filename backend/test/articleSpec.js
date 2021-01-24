@@ -225,6 +225,25 @@ describe('Article', () => {
             });
         });
     });
+    it('should not POST an article if the user is not logged-in', (done) => {
+      const article = {
+        title: "Voyage au Japon",
+        slug: "tdm-japon",
+        image_id: 2,
+        description: "Une courte description de l'article",
+        content: "Le contenu super intéressant de l'article : ce voyage était hyper stylé, on s'est régalée :)",
+        isdraft: false
+      };
+      chai.request(app)
+        .post('/api/article')
+        .send(article)
+        .end((err, res) => {
+          res.should.have.status(401);
+          res.body.should.be.a('object');
+          res.body.should.have.property('error').eql('Requête non authentifiée');
+          done();
+        });
+    });
   })
 
 
@@ -561,6 +580,39 @@ describe('Article', () => {
           });
         });
     });
+    it('should not MODIFY an article if the user is not logged-in', (done) => {
+      const now = new Date();
+      const article = new Article({
+        title: "Voyage au Japon",
+        slug: "tdm-japon",
+        image_id: 2,
+        description: "Une courte description de l'article",
+        content: "Le contenu super intéressant de l'article : ce voyage était hyper stylé, on s'est régalée :)",
+        isdraft: true,
+        created_at: now,
+        modified_at: now
+      });
+      article.save()
+        .then(savedArticle => {
+          const articleModified = {
+            title: "Voyage au Japon",
+            slug: "tdm-japon",
+            image_id: 12,
+            description: "description article",
+            content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vestibulum a urna quis elementum. Aliquam ullamcorper, massa vel rutrum semper, ex tellus maximus arcu, ut convallis nibh erat id risus. Proin a mi nisi. Phasellus vel elit vel odio commodo fermentum at ullamcorper sapien. Duis nunc diam, iaculis ut tempor eu, gravida ut odio. Vestibulum cursus dolor sed maximus ultrices. Maecenas vehicula convallis neque, ut iaculis odio volutpat ut. Phasellus dapibus egestas nibh, eget imperdiet diam sodales at. Nam eget velit non augue tristique sagittis ac ac orci.",
+            isdraft: false
+          };
+          chai.request(app)
+          .put('/api/article/' + savedArticle._id)
+          .send(articleModified)
+          .end((err, res) => {
+            res.should.have.status(401);
+            res.body.should.be.a('object');
+            res.body.should.have.property('error').eql('Requête non authentifiée');
+            done();
+          });
+        });
+    });
   });
 
 
@@ -614,6 +666,30 @@ describe('Article', () => {
             res.should.have.status(400);
             res.body.should.be.a('object');
             res.body.should.have.property('error');
+            done();
+          });
+        });
+    });
+    it('should not DELETE an article if the user is not logged-in', (done) => {
+      const now = new Date();
+      const article = new Article({
+        title: "Voyage au Japon",
+        slug: "tdm-japon",
+        image_id: 2,
+        description: "Une courte description de l'article",
+        content: "Le contenu super intéressant de l'article : ce voyage était hyper stylé, on s'est régalée :)",
+        isdraft: true,
+        created_at: now,
+        modified_at: now
+      });
+      article.save()
+        .then(savedArticle => {
+          chai.request(app)
+          .delete('/api/article/' + savedArticle._id)
+          .end((err, res) => {
+            res.should.have.status(401);
+            res.body.should.be.a('object');
+            res.body.should.have.property('error').eql('Requête non authentifiée');
             done();
           });
         });
