@@ -37,7 +37,7 @@ describe('Article', () => {
       };
       chai.request(app)
         .post('/api/article')
-        .set('Cookie', 'cryptedToken=U2FsdGVkX18XWN7D1EQrraWjItftXHNJCIqbNLD6MlJKZBZJyuuUb13xM6+4BRhBLrHmk86azRuHmlat++0dQGj1UA5arpA2DggENvkXvn9a+D/ozfSWJMPpwijDwKcMRpQ9NWupSokshy5u0X0HfOZGm2EEnfJs1QIubu9tYARuwO3efIdCHkIHTKzKJgUbKwAeKnz36BPHq437yul+UPyciGzDRUJOJ6+KvERu3NjtmQM8kMdiNqpirkkGoB2Ck3iTrQIJ86ELymZMqrLl9PoY2Fp0fzzZDjvdI3ZPpybMV73SlduDJSpHVg6HcVMcSlvGT4AKvmD7IL7Vr81GTw==; Path=/; HttpOnly; Expires=Mon, 25 Jan 2021 00:49:23 GMT;')
+        .set('Cookie', process.env.AUTH_COOKIE)
         .send(article)
         .end((err, res) => {
           res.should.have.status(400);
@@ -59,7 +59,7 @@ describe('Article', () => {
       };
       chai.request(app)
         .post('/api/article')
-        .set('Cookie', 'cryptedToken=U2FsdGVkX18XWN7D1EQrraWjItftXHNJCIqbNLD6MlJKZBZJyuuUb13xM6+4BRhBLrHmk86azRuHmlat++0dQGj1UA5arpA2DggENvkXvn9a+D/ozfSWJMPpwijDwKcMRpQ9NWupSokshy5u0X0HfOZGm2EEnfJs1QIubu9tYARuwO3efIdCHkIHTKzKJgUbKwAeKnz36BPHq437yul+UPyciGzDRUJOJ6+KvERu3NjtmQM8kMdiNqpirkkGoB2Ck3iTrQIJ86ELymZMqrLl9PoY2Fp0fzzZDjvdI3ZPpybMV73SlduDJSpHVg6HcVMcSlvGT4AKvmD7IL7Vr81GTw==; Path=/; HttpOnly; Expires=Mon, 25 Jan 2021 00:49:23 GMT;')
+        .set('Cookie', process.env.AUTH_COOKIE)
         .send(article)
         .end((err, res) => {
           res.should.have.status(400);
@@ -81,7 +81,7 @@ describe('Article', () => {
       };
       chai.request(app)
         .post('/api/article')
-        .set('Cookie', 'cryptedToken=U2FsdGVkX18XWN7D1EQrraWjItftXHNJCIqbNLD6MlJKZBZJyuuUb13xM6+4BRhBLrHmk86azRuHmlat++0dQGj1UA5arpA2DggENvkXvn9a+D/ozfSWJMPpwijDwKcMRpQ9NWupSokshy5u0X0HfOZGm2EEnfJs1QIubu9tYARuwO3efIdCHkIHTKzKJgUbKwAeKnz36BPHq437yul+UPyciGzDRUJOJ6+KvERu3NjtmQM8kMdiNqpirkkGoB2Ck3iTrQIJ86ELymZMqrLl9PoY2Fp0fzzZDjvdI3ZPpybMV73SlduDJSpHVg6HcVMcSlvGT4AKvmD7IL7Vr81GTw==; Path=/; HttpOnly; Expires=Mon, 25 Jan 2021 00:49:23 GMT;')
+        .set('Cookie', process.env.AUTH_COOKIE)
         .send(article)
         .end((err, res) => {
           res.should.have.status(400);
@@ -107,7 +107,7 @@ describe('Article', () => {
       };
       chai.request(app)
         .post('/api/article')
-        .set('Cookie', 'cryptedToken=U2FsdGVkX18XWN7D1EQrraWjItftXHNJCIqbNLD6MlJKZBZJyuuUb13xM6+4BRhBLrHmk86azRuHmlat++0dQGj1UA5arpA2DggENvkXvn9a+D/ozfSWJMPpwijDwKcMRpQ9NWupSokshy5u0X0HfOZGm2EEnfJs1QIubu9tYARuwO3efIdCHkIHTKzKJgUbKwAeKnz36BPHq437yul+UPyciGzDRUJOJ6+KvERu3NjtmQM8kMdiNqpirkkGoB2Ck3iTrQIJ86ELymZMqrLl9PoY2Fp0fzzZDjvdI3ZPpybMV73SlduDJSpHVg6HcVMcSlvGT4AKvmD7IL7Vr81GTw==; Path=/; HttpOnly; Expires=Mon, 25 Jan 2021 00:49:23 GMT;')
+        .set('Cookie', process.env.AUTH_COOKIE)
         .send(article)
         .end((err, res) => {
           res.should.have.status(201);
@@ -133,7 +133,7 @@ describe('Article', () => {
       };
       chai.request(app)
         .post('/api/article')
-        .set('Cookie', 'cryptedToken=U2FsdGVkX18XWN7D1EQrraWjItftXHNJCIqbNLD6MlJKZBZJyuuUb13xM6+4BRhBLrHmk86azRuHmlat++0dQGj1UA5arpA2DggENvkXvn9a+D/ozfSWJMPpwijDwKcMRpQ9NWupSokshy5u0X0HfOZGm2EEnfJs1QIubu9tYARuwO3efIdCHkIHTKzKJgUbKwAeKnz36BPHq437yul+UPyciGzDRUJOJ6+KvERu3NjtmQM8kMdiNqpirkkGoB2Ck3iTrQIJ86ELymZMqrLl9PoY2Fp0fzzZDjvdI3ZPpybMV73SlduDJSpHVg6HcVMcSlvGT4AKvmD7IL7Vr81GTw==; Path=/; HttpOnly; Expires=Mon, 25 Jan 2021 00:49:23 GMT;')
+        .set('Cookie', process.env.AUTH_COOKIE)
         .send(article)
         .end((err, res) => {
           res.should.have.status(201);
@@ -175,7 +175,7 @@ describe('Article', () => {
           };
           chai.request(app)
           .post('/api/article')
-          .set('Cookie', 'cryptedToken=U2FsdGVkX18XWN7D1EQrraWjItftXHNJCIqbNLD6MlJKZBZJyuuUb13xM6+4BRhBLrHmk86azRuHmlat++0dQGj1UA5arpA2DggENvkXvn9a+D/ozfSWJMPpwijDwKcMRpQ9NWupSokshy5u0X0HfOZGm2EEnfJs1QIubu9tYARuwO3efIdCHkIHTKzKJgUbKwAeKnz36BPHq437yul+UPyciGzDRUJOJ6+KvERu3NjtmQM8kMdiNqpirkkGoB2Ck3iTrQIJ86ELymZMqrLl9PoY2Fp0fzzZDjvdI3ZPpybMV73SlduDJSpHVg6HcVMcSlvGT4AKvmD7IL7Vr81GTw==; Path=/; HttpOnly; Expires=Mon, 25 Jan 2021 00:49:23 GMT;')
+          .set('Cookie', process.env.AUTH_COOKIE)
           .send(article2)
           .end((err, res) => {
             res.should.have.status(400);
@@ -212,7 +212,7 @@ describe('Article', () => {
           };
           chai.request(app)
             .post('/api/article')
-            .set('Cookie', 'cryptedToken=U2FsdGVkX18XWN7D1EQrraWjItftXHNJCIqbNLD6MlJKZBZJyuuUb13xM6+4BRhBLrHmk86azRuHmlat++0dQGj1UA5arpA2DggENvkXvn9a+D/ozfSWJMPpwijDwKcMRpQ9NWupSokshy5u0X0HfOZGm2EEnfJs1QIubu9tYARuwO3efIdCHkIHTKzKJgUbKwAeKnz36BPHq437yul+UPyciGzDRUJOJ6+KvERu3NjtmQM8kMdiNqpirkkGoB2Ck3iTrQIJ86ELymZMqrLl9PoY2Fp0fzzZDjvdI3ZPpybMV73SlduDJSpHVg6HcVMcSlvGT4AKvmD7IL7Vr81GTw==; Path=/; HttpOnly; Expires=Mon, 25 Jan 2021 00:49:23 GMT;')
+            .set('Cookie', process.env.AUTH_COOKIE)
             .send(article)
             .end((err, res) => {
               res.should.have.status(400);
@@ -420,7 +420,7 @@ describe('Article', () => {
           };
           chai.request(app)
           .put('/api/article/' + savedArticle._id)
-          .set('Cookie', 'cryptedToken=U2FsdGVkX18XWN7D1EQrraWjItftXHNJCIqbNLD6MlJKZBZJyuuUb13xM6+4BRhBLrHmk86azRuHmlat++0dQGj1UA5arpA2DggENvkXvn9a+D/ozfSWJMPpwijDwKcMRpQ9NWupSokshy5u0X0HfOZGm2EEnfJs1QIubu9tYARuwO3efIdCHkIHTKzKJgUbKwAeKnz36BPHq437yul+UPyciGzDRUJOJ6+KvERu3NjtmQM8kMdiNqpirkkGoB2Ck3iTrQIJ86ELymZMqrLl9PoY2Fp0fzzZDjvdI3ZPpybMV73SlduDJSpHVg6HcVMcSlvGT4AKvmD7IL7Vr81GTw==; Path=/; HttpOnly; Expires=Mon, 25 Jan 2021 00:49:23 GMT;')
+          .set('Cookie', process.env.AUTH_COOKIE)
           .send(articleModified)
           .end((err, res) => {
             res.should.have.status(201);
@@ -449,7 +449,7 @@ describe('Article', () => {
           };
           chai.request(app)
           .put('/api/article/' + savedArticle._id)
-          .set('Cookie', 'cryptedToken=U2FsdGVkX18XWN7D1EQrraWjItftXHNJCIqbNLD6MlJKZBZJyuuUb13xM6+4BRhBLrHmk86azRuHmlat++0dQGj1UA5arpA2DggENvkXvn9a+D/ozfSWJMPpwijDwKcMRpQ9NWupSokshy5u0X0HfOZGm2EEnfJs1QIubu9tYARuwO3efIdCHkIHTKzKJgUbKwAeKnz36BPHq437yul+UPyciGzDRUJOJ6+KvERu3NjtmQM8kMdiNqpirkkGoB2Ck3iTrQIJ86ELymZMqrLl9PoY2Fp0fzzZDjvdI3ZPpybMV73SlduDJSpHVg6HcVMcSlvGT4AKvmD7IL7Vr81GTw==; Path=/; HttpOnly; Expires=Mon, 25 Jan 2021 00:49:23 GMT;')
+          .set('Cookie', process.env.AUTH_COOKIE)
           .send(articleModified)
           .end((err, res) => {
             res.should.have.status(201);
@@ -490,7 +490,7 @@ describe('Article', () => {
               }
               chai.request(app)
               .put('/api/article/' + savedArticle._id)
-              .set('Cookie', 'cryptedToken=U2FsdGVkX18XWN7D1EQrraWjItftXHNJCIqbNLD6MlJKZBZJyuuUb13xM6+4BRhBLrHmk86azRuHmlat++0dQGj1UA5arpA2DggENvkXvn9a+D/ozfSWJMPpwijDwKcMRpQ9NWupSokshy5u0X0HfOZGm2EEnfJs1QIubu9tYARuwO3efIdCHkIHTKzKJgUbKwAeKnz36BPHq437yul+UPyciGzDRUJOJ6+KvERu3NjtmQM8kMdiNqpirkkGoB2Ck3iTrQIJ86ELymZMqrLl9PoY2Fp0fzzZDjvdI3ZPpybMV73SlduDJSpHVg6HcVMcSlvGT4AKvmD7IL7Vr81GTw==; Path=/; HttpOnly; Expires=Mon, 25 Jan 2021 00:49:23 GMT;')
+              .set('Cookie', process.env.AUTH_COOKIE)
               .send(article2modified)
               .end((err, res) => {
                 res.should.have.status(400);
@@ -536,7 +536,7 @@ describe('Article', () => {
               }
               chai.request(app)
               .put('/api/article/' + savedArticle._id)
-              .set('Cookie', 'cryptedToken=U2FsdGVkX18XWN7D1EQrraWjItftXHNJCIqbNLD6MlJKZBZJyuuUb13xM6+4BRhBLrHmk86azRuHmlat++0dQGj1UA5arpA2DggENvkXvn9a+D/ozfSWJMPpwijDwKcMRpQ9NWupSokshy5u0X0HfOZGm2EEnfJs1QIubu9tYARuwO3efIdCHkIHTKzKJgUbKwAeKnz36BPHq437yul+UPyciGzDRUJOJ6+KvERu3NjtmQM8kMdiNqpirkkGoB2Ck3iTrQIJ86ELymZMqrLl9PoY2Fp0fzzZDjvdI3ZPpybMV73SlduDJSpHVg6HcVMcSlvGT4AKvmD7IL7Vr81GTw==; Path=/; HttpOnly; Expires=Mon, 25 Jan 2021 00:49:23 GMT;')
+              .set('Cookie', process.env.AUTH_COOKIE)
               .send(article2modified)
               .end((err, res) => {
                 res.should.have.status(400);
@@ -570,7 +570,7 @@ describe('Article', () => {
           };
           chai.request(app)
           .put('/api/article/12')
-          .set('Cookie', 'cryptedToken=U2FsdGVkX18XWN7D1EQrraWjItftXHNJCIqbNLD6MlJKZBZJyuuUb13xM6+4BRhBLrHmk86azRuHmlat++0dQGj1UA5arpA2DggENvkXvn9a+D/ozfSWJMPpwijDwKcMRpQ9NWupSokshy5u0X0HfOZGm2EEnfJs1QIubu9tYARuwO3efIdCHkIHTKzKJgUbKwAeKnz36BPHq437yul+UPyciGzDRUJOJ6+KvERu3NjtmQM8kMdiNqpirkkGoB2Ck3iTrQIJ86ELymZMqrLl9PoY2Fp0fzzZDjvdI3ZPpybMV73SlduDJSpHVg6HcVMcSlvGT4AKvmD7IL7Vr81GTw==; Path=/; HttpOnly; Expires=Mon, 25 Jan 2021 00:49:23 GMT;')
+          .set('Cookie', process.env.AUTH_COOKIE)
           .send(articleModified)
           .end((err, res) => {
             res.should.have.status(400);
@@ -636,7 +636,7 @@ describe('Article', () => {
         .then(savedArticle => {
           chai.request(app)
           .delete('/api/article/' + savedArticle._id)
-          .set('Cookie', 'cryptedToken=U2FsdGVkX18XWN7D1EQrraWjItftXHNJCIqbNLD6MlJKZBZJyuuUb13xM6+4BRhBLrHmk86azRuHmlat++0dQGj1UA5arpA2DggENvkXvn9a+D/ozfSWJMPpwijDwKcMRpQ9NWupSokshy5u0X0HfOZGm2EEnfJs1QIubu9tYARuwO3efIdCHkIHTKzKJgUbKwAeKnz36BPHq437yul+UPyciGzDRUJOJ6+KvERu3NjtmQM8kMdiNqpirkkGoB2Ck3iTrQIJ86ELymZMqrLl9PoY2Fp0fzzZDjvdI3ZPpybMV73SlduDJSpHVg6HcVMcSlvGT4AKvmD7IL7Vr81GTw==; Path=/; HttpOnly; Expires=Mon, 25 Jan 2021 00:49:23 GMT;')
+          .set('Cookie', process.env.AUTH_COOKIE)
           .end((err, res) => {
             res.should.have.status(200);
             res.body.should.be.a('object');
@@ -661,7 +661,7 @@ describe('Article', () => {
         .then(savedArticle => {
           chai.request(app)
           .delete('/api/article/12')
-          .set('Cookie', 'cryptedToken=U2FsdGVkX18XWN7D1EQrraWjItftXHNJCIqbNLD6MlJKZBZJyuuUb13xM6+4BRhBLrHmk86azRuHmlat++0dQGj1UA5arpA2DggENvkXvn9a+D/ozfSWJMPpwijDwKcMRpQ9NWupSokshy5u0X0HfOZGm2EEnfJs1QIubu9tYARuwO3efIdCHkIHTKzKJgUbKwAeKnz36BPHq437yul+UPyciGzDRUJOJ6+KvERu3NjtmQM8kMdiNqpirkkGoB2Ck3iTrQIJ86ELymZMqrLl9PoY2Fp0fzzZDjvdI3ZPpybMV73SlduDJSpHVg6HcVMcSlvGT4AKvmD7IL7Vr81GTw==; Path=/; HttpOnly; Expires=Mon, 25 Jan 2021 00:49:23 GMT;')
+          .set('Cookie', process.env.AUTH_COOKIE)
           .end((err, res) => {
             res.should.have.status(400);
             res.body.should.be.a('object');
