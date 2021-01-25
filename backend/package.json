@@ -6,6 +6,7 @@
   "scripts": {
     "test": "mocha",
     "nyan": "mocha -R nyan",
+    "coverage": "nyc mocha",
     "start": "nodemon src/server"
   },
   "author": "",
@@ -26,6 +27,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
-    "mocha": "^8.2.1"
+    "mocha": "^8.2.1",
+    "nyc": "^15.1.0"
   }
 }
