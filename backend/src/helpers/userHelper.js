@@ -26,7 +26,7 @@ exports.generateUserForDB = async (login, password) => {
  * @param {String} username User's username
  * @param {String} password User's password
  * @returns {User} User object, corresponding to User Model
- * @throws {Error} if invalid user or password
+ * @throws {String} if invalid user or password
  */
 exports.authenticateUser = async (username, password) => {
   // Recherche user

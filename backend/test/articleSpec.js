@@ -2,7 +2,6 @@
 process.env.NODE_ENV = 'test';
 
 // imports
-const mongoose = require("mongoose");
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 chai.should();
@@ -10,9 +9,22 @@ chai.use(chaiHttp);
 
 const app = require('../src/app')
 const Article = require('../src/models/Article');
+const User = require('../src/models/User');
+const userHelper = require('../src/helpers/userHelper');
+const securityHelper = require('../src/helpers/securityHelper');
 
 describe('Article', () => {
-  // DELETE EVERYTHING FROM THE TEST DATABASE BEFORE EVERY SINGLE TEST
+  // Once Before All tests, DELETE ALL USERS, then Add a first user.
+  before((done) => {
+    User.deleteMany({}, (err) => {
+      userHelper.generateUserForDB('admin', 'admin').then((user) => {
+        user.save().then(() => {
+          done();
+        });
+      });
+    });
+  });
+  // DELETE ALL ARTICLES BEFORE EVERY TEST
   beforeEach((done) => {
     Article.deleteMany({}, (err) => {
       done();
@@ -28,125 +40,147 @@ describe('Article', () => {
      * 1 - Info requises manquantes = pas d'ajout
      */
     it('should not POST an article without "title" data', (done) => {
-      const article = {
-        slug: "tdm-japon",
-        image_id: 2,
-        description: "Une courte description de l'article",
-        content: "Le contenu super intéressant de l'article : ce voyage était hyper stylé, on s'est régalée :)",
-        isdraft: false
-      };
-      chai.request(app)
-        .post('/api/article')
-        .set('Cookie', process.env.AUTH_COOKIE)
-        .send(article)
-        .end((err, res) => {
-          res.should.have.status(400);
-          res.body.should.be.a('object');
-          res.body.should.have.property('error');
-          res.body.error.should.have.property('errors');
-          res.body.error.errors.should.have.property('title');
-          res.body.error.errors.title.should.have.property('kind').eql('required');
-          done();
-        });
+      // authentification
+      userHelper.authenticateUser('admin', 'admin').then((user) => {
+        const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
+        const cookieHeader = "cryptedToken=" + cryptedCookie;
+        const article = {
+          slug: "tdm-japon",
+          image_id: 2,
+          description: "Une courte description de l'article",
+          content: "Le contenu super intéressant de l'article : ce voyage était hyper stylé, on s'est régalée :)",
+          isdraft: false
+        };
+        chai.request(app)
+          .post('/api/article')
+          .set('Cookie', cookieHeader)
+          .send(article)
+          .end((err, res) => {
+            res.should.have.status(400);
+            res.body.should.be.a('object');
+            res.body.should.have.property('error');
+            res.body.error.should.have.property('errors');
+            res.body.error.errors.should.have.property('title');
+            res.body.error.errors.title.should.have.property('kind').eql('required');
+            done();
+          });
+      })
     });
     it('should not POST an article without "slug" data', (done) => {
-      const article = {
-        title: "Voyage au Japon",
-        image_id: 2,
-        description: "Une courte description de l'article",
-        content: "Le contenu super intéressant de l'article : ce voyage était hyper stylé, on s'est régalée :)",
-        isdraft: false
-      };
-      chai.request(app)
-        .post('/api/article')
-        .set('Cookie', process.env.AUTH_COOKIE)
-        .send(article)
-        .end((err, res) => {
-          res.should.have.status(400);
-          res.body.should.be.a('object');
-          res.body.should.have.property('error');
-          res.body.error.should.have.property('errors');
-          res.body.error.errors.should.have.property('slug');
-          res.body.error.errors.slug.should.have.property('kind').eql('required');
-          done();
-        });
+      userHelper.authenticateUser('admin', 'admin').then((user) => {
+        const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
+        const cookieHeader = "cryptedToken=" + cryptedCookie;
+
+        const article = {
+          title: "Voyage au Japon",
+          image_id: 2,
+          description: "Une courte description de l'article",
+          content: "Le contenu super intéressant de l'article : ce voyage était hyper stylé, on s'est régalée :)",
+          isdraft: false
+        };
+        chai.request(app)
+          .post('/api/article')
+          .set('Cookie', cookieHeader)
+          .send(article)
+          .end((err, res) => {
+            res.should.have.status(400);
+            res.body.should.be.a('object');
+            res.body.should.have.property('error');
+            res.body.error.should.have.property('errors');
+            res.body.error.errors.should.have.property('slug');
+            res.body.error.errors.slug.should.have.property('kind').eql('required');
+            done();
+          });
+      });
     });
     it('should not POST an article without "isdraft" data', (done) => {
-      const article = {
-        title: "Voyage au Japon",
-        slug: "tdm-japon",
-        image_id: 2,
-        description: "Une courte description de l'article",
-        content: "Le contenu super intéressant de l'article : ce voyage était hyper stylé, on s'est régalée :)"
-      };
-      chai.request(app)
-        .post('/api/article')
-        .set('Cookie', process.env.AUTH_COOKIE)
-        .send(article)
-        .end((err, res) => {
-          res.should.have.status(400);
-          res.body.should.be.a('object');
-          res.body.should.have.property('error');
-          res.body.error.should.have.property('errors');
-          res.body.error.errors.should.have.property('isdraft');
-          res.body.error.errors.isdraft.should.have.property('kind').eql('required');
-          done();
-        });
+      userHelper.authenticateUser('admin', 'admin').then((user) => {
+        const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
+        const cookieHeader = "cryptedToken=" + cryptedCookie;
+        const article = {
+          title: "Voyage au Japon",
+          slug: "tdm-japon",
+          image_id: 2,
+          description: "Une courte description de l'article",
+          content: "Le contenu super intéressant de l'article : ce voyage était hyper stylé, on s'est régalée :)"
+        };
+        chai.request(app)
+          .post('/api/article')
+          .set('Cookie', cookieHeader)
+          .send(article)
+          .end((err, res) => {
+            res.should.have.status(400);
+            res.body.should.be.a('object');
+            res.body.should.have.property('error');
+            res.body.error.should.have.property('errors');
+            res.body.error.errors.should.have.property('isdraft');
+            res.body.error.errors.isdraft.should.have.property('kind').eql('required');
+            done();
+          });
+      });
     });
     /**
      * 2 - Ajout effectifs d'Articles
      */
     it('should POST an article with all data', (done) => {
-      const article = {
-        title: "Voyage au Japon",
-        slug: "tdm-japon",
-        image_id: 2,
-        description: "Une courte description de l'article",
-        content: "Le contenu super intéressant de l'article : ce voyage était hyper stylé, on s'est régalée :)",
-        isdraft: false
-      };
-      chai.request(app)
-        .post('/api/article')
-        .set('Cookie', process.env.AUTH_COOKIE)
-        .send(article)
-        .end((err, res) => {
-          res.should.have.status(201);
-          res.body.should.be.a('object');
-          res.body.should.have.property('message').eql('Article enregistré');
-          res.body.should.have.property('_id');
-          res.body.should.have.property('title').eql('Voyage au Japon');
-          res.body.should.have.property('slug').eql('tdm-japon');
-          res.body.should.have.property('image_id');
-          res.body.should.have.property('description').eql('Une courte description de l\'article');
-          res.body.should.have.property('content').eql('Le contenu super intéressant de l\'article : ce voyage était hyper stylé, on s\'est régalée :)');
-          res.body.should.have.property('isdraft').eql(false);
-          res.body.should.have.property('created_at');
-          res.body.should.have.property('modified_at');
-          done();
-        });
+      userHelper.authenticateUser('admin', 'admin').then((user) => {
+        const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
+        const cookieHeader = "cryptedToken=" + cryptedCookie;
+        const article = {
+          title: "Voyage au Japon",
+          slug: "tdm-japon",
+          image_id: 2,
+          description: "Une courte description de l'article",
+          content: "Le contenu super intéressant de l'article : ce voyage était hyper stylé, on s'est régalée :)",
+          isdraft: false
+        };
+        chai.request(app)
+          .post('/api/article')
+          .set('Cookie', cookieHeader)
+          .send(article)
+          .end((err, res) => {
+            res.should.have.status(201);
+            res.body.should.be.a('object');
+            res.body.should.have.property('message').eql('Article enregistré');
+            res.body.should.have.property('_id');
+            res.body.should.have.property('title').eql('Voyage au Japon');
+            res.body.should.have.property('slug').eql('tdm-japon');
+            res.body.should.have.property('image_id');
+            res.body.should.have.property('description').eql('Une courte description de l\'article');
+            res.body.should.have.property('content').eql('Le contenu super intéressant de l\'article : ce voyage était hyper stylé, on s\'est régalée :)');
+            res.body.should.have.property('isdraft').eql(false);
+            res.body.should.have.property('created_at');
+            res.body.should.have.property('modified_at');
+            done();
+          });
+      });
     });
     it('should POST an article with only the required data', (done) => {
-      const article = {
-        title: "Voyage au Pérou",
-        slug: "tdm-perou",
-        isdraft: false
-      };
-      chai.request(app)
-        .post('/api/article')
-        .set('Cookie', process.env.AUTH_COOKIE)
-        .send(article)
-        .end((err, res) => {
-          res.should.have.status(201);
-          res.body.should.be.a('object');
-          res.body.should.have.property('message').eql('Article enregistré');
-          res.body.should.have.property('_id');
-          res.body.should.have.property('title').eql('Voyage au Pérou');
-          res.body.should.have.property('slug').eql('tdm-perou');
-          res.body.should.have.property('isdraft').eql(false);
-          res.body.should.have.property('created_at');
-          res.body.should.have.property('modified_at');
-          done();
-        });
+      userHelper.authenticateUser('admin', 'admin').then((user) => {
+        const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
+        const cookieHeader = "cryptedToken=" + cryptedCookie;
+        const article = {
+          title: "Voyage au Pérou",
+          slug: "tdm-perou",
+          isdraft: false
+        };
+        chai.request(app)
+          .post('/api/article')
+          .set('Cookie', cookieHeader)
+          .send(article)
+          .end((err, res) => {
+            res.should.have.status(201);
+            res.body.should.be.a('object');
+            res.body.should.have.property('message').eql('Article enregistré');
+            res.body.should.have.property('_id');
+            res.body.should.have.property('title').eql('Voyage au Pérou');
+            res.body.should.have.property('slug').eql('tdm-perou');
+            res.body.should.have.property('isdraft').eql(false);
+            res.body.should.have.property('created_at');
+            res.body.should.have.property('modified_at');
+            done();
+          });
+      });
     });
     /**
      * 3 - Infos uniques identiques à de précédents articles = pas d'ajout
@@ -165,26 +199,30 @@ describe('Article', () => {
       });
       article1.save()
         .then(() => {
-          const article2 = {
-            title: "Voyage au Japon",
-            slug: "qqch-different",
-            image_id: 12,
-            description: "qqch-different",
-            content: "qqch-different",
-            isdraft: false
-          };
-          chai.request(app)
-          .post('/api/article')
-          .set('Cookie', process.env.AUTH_COOKIE)
-          .send(article2)
-          .end((err, res) => {
-            res.should.have.status(400);
-            res.body.should.be.a('object');
-            res.body.should.have.property('error');
-            res.body.error.should.have.property('errors');
-            res.body.error.errors.should.have.property('title');
-            res.body.error.errors.title.should.have.property('kind').eql('unique');
-            done();
+          userHelper.authenticateUser('admin', 'admin').then((user) => {
+            const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
+            const cookieHeader = "cryptedToken=" + cryptedCookie;
+            const article2 = {
+              title: "Voyage au Japon",
+              slug: "qqch-different",
+              image_id: 12,
+              description: "qqch-different",
+              content: "qqch-different",
+              isdraft: false
+            };
+            chai.request(app)
+            .post('/api/article')
+            .set('Cookie', cookieHeader)
+            .send(article2)
+            .end((err, res) => {
+              res.should.have.status(400);
+              res.body.should.be.a('object');
+              res.body.should.have.property('error');
+              res.body.error.should.have.property('errors');
+              res.body.error.errors.should.have.property('title');
+              res.body.error.errors.title.should.have.property('kind').eql('unique');
+              done();
+            });
           });
         });
     });
@@ -202,27 +240,31 @@ describe('Article', () => {
       });
       article1.save()
         .then(() => {
-          const article = {
-            title: "qqch-different",
-            slug: "tdm-japon",
-            image_id: 2,
-            description: "qqch-different",
-            content: "qqch-different",
-            isdraft: false
-          };
-          chai.request(app)
-            .post('/api/article')
-            .set('Cookie', process.env.AUTH_COOKIE)
-            .send(article)
-            .end((err, res) => {
-              res.should.have.status(400);
-              res.body.should.be.a('object');
-              res.body.should.have.property('error');
-              res.body.error.should.have.property('errors');
-              res.body.error.errors.should.have.property('slug');
-              res.body.error.errors.slug.should.have.property('kind').eql('unique');
-              done();
-            });
+          userHelper.authenticateUser('admin', 'admin').then((user) => {
+            const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
+            const cookieHeader = "cryptedToken=" + cryptedCookie;
+            const article = {
+              title: "qqch-different",
+              slug: "tdm-japon",
+              image_id: 2,
+              description: "qqch-different",
+              content: "qqch-different",
+              isdraft: false
+            };
+            chai.request(app)
+              .post('/api/article')
+              .set('Cookie', cookieHeader)
+              .send(article)
+              .end((err, res) => {
+                res.should.have.status(400);
+                res.body.should.be.a('object');
+                res.body.should.have.property('error');
+                res.body.error.should.have.property('errors');
+                res.body.error.errors.should.have.property('slug');
+                res.body.error.errors.slug.should.have.property('kind').eql('unique');
+                done();
+              });
+          });
         });
     });
     it('should not POST an article if the user is not logged-in', (done) => {
@@ -410,23 +452,27 @@ describe('Article', () => {
       });
       article.save()
         .then(savedArticle => {
-          const articleModified = {
-            title: "Voyage au Japon",
-            slug: "tdm-japon",
-            image_id: 12,
-            description: "description article",
-            content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vestibulum a urna quis elementum. Aliquam ullamcorper, massa vel rutrum semper, ex tellus maximus arcu, ut convallis nibh erat id risus. Proin a mi nisi. Phasellus vel elit vel odio commodo fermentum at ullamcorper sapien. Duis nunc diam, iaculis ut tempor eu, gravida ut odio. Vestibulum cursus dolor sed maximus ultrices. Maecenas vehicula convallis neque, ut iaculis odio volutpat ut. Phasellus dapibus egestas nibh, eget imperdiet diam sodales at. Nam eget velit non augue tristique sagittis ac ac orci.",
-            isdraft: false
-          };
-          chai.request(app)
-          .put('/api/article/' + savedArticle._id)
-          .set('Cookie', process.env.AUTH_COOKIE)
-          .send(articleModified)
-          .end((err, res) => {
-            res.should.have.status(201);
-            res.body.should.be.a('object');
-            res.body.should.have.property('message').eql('Article modifié');
-            done();
+          userHelper.authenticateUser('admin', 'admin').then((user) => {
+            const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
+            const cookieHeader = "cryptedToken=" + cryptedCookie;
+            const articleModified = {
+              title: "Voyage au Japon",
+              slug: "tdm-japon",
+              image_id: 12,
+              description: "description article",
+              content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vestibulum a urna quis elementum. Aliquam ullamcorper, massa vel rutrum semper, ex tellus maximus arcu, ut convallis nibh erat id risus. Proin a mi nisi. Phasellus vel elit vel odio commodo fermentum at ullamcorper sapien. Duis nunc diam, iaculis ut tempor eu, gravida ut odio. Vestibulum cursus dolor sed maximus ultrices. Maecenas vehicula convallis neque, ut iaculis odio volutpat ut. Phasellus dapibus egestas nibh, eget imperdiet diam sodales at. Nam eget velit non augue tristique sagittis ac ac orci.",
+              isdraft: false
+            };
+            chai.request(app)
+            .put('/api/article/' + savedArticle._id)
+            .set('Cookie', cookieHeader)
+            .send(articleModified)
+            .end((err, res) => {
+              res.should.have.status(201);
+              res.body.should.be.a('object');
+              res.body.should.have.property('message').eql('Article modifié');
+              done();
+            });
           });
         });
     });
@@ -444,18 +490,22 @@ describe('Article', () => {
       });
       article.save()
         .then(savedArticle => {
-          const articleModified = {
-            content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vestibulum a urna quis elementum. Aliquam ullamcorper, massa vel rutrum semper, ex tellus maximus arcu, ut convallis nibh erat id risus. Proin a mi nisi. Phasellus vel elit vel odio commodo fermentum at ullamcorper sapien. Duis nunc diam, iaculis ut tempor eu, gravida ut odio. Vestibulum cursus dolor sed maximus ultrices. Maecenas vehicula convallis neque, ut iaculis odio volutpat ut. Phasellus dapibus egestas nibh, eget imperdiet diam sodales at. Nam eget velit non augue tristique sagittis ac ac orci."
-          };
-          chai.request(app)
-          .put('/api/article/' + savedArticle._id)
-          .set('Cookie', process.env.AUTH_COOKIE)
-          .send(articleModified)
-          .end((err, res) => {
-            res.should.have.status(201);
-            res.body.should.be.a('object');
-            res.body.should.have.property('message').eql('Article modifié');
-            done();
+          userHelper.authenticateUser('admin', 'admin').then((user) => {
+            const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
+            const cookieHeader = "cryptedToken=" + cryptedCookie;
+            const articleModified = {
+              content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vestibulum a urna quis elementum. Aliquam ullamcorper, massa vel rutrum semper, ex tellus maximus arcu, ut convallis nibh erat id risus. Proin a mi nisi. Phasellus vel elit vel odio commodo fermentum at ullamcorper sapien. Duis nunc diam, iaculis ut tempor eu, gravida ut odio. Vestibulum cursus dolor sed maximus ultrices. Maecenas vehicula convallis neque, ut iaculis odio volutpat ut. Phasellus dapibus egestas nibh, eget imperdiet diam sodales at. Nam eget velit non augue tristique sagittis ac ac orci."
+            };
+            chai.request(app)
+            .put('/api/article/' + savedArticle._id)
+            .set('Cookie', cookieHeader)
+            .send(articleModified)
+            .end((err, res) => {
+              res.should.have.status(201);
+              res.body.should.be.a('object');
+              res.body.should.have.property('message').eql('Article modifié');
+              done();
+            });
           });
         });
     });
@@ -485,22 +535,26 @@ describe('Article', () => {
           });
           article2.save()
             .then(savedArticle => {
-              const article2modified = {
-                title: "Voyage au Japon",
-              }
-              chai.request(app)
-              .put('/api/article/' + savedArticle._id)
-              .set('Cookie', process.env.AUTH_COOKIE)
-              .send(article2modified)
-              .end((err, res) => {
-                res.should.have.status(400);
-                res.body.should.be.a('object');
-                res.body.should.have.property('error');
-                res.body.error.should.be.a('object');
-                res.body.error.should.have.property('keyValue');
-                res.body.error.keyValue.should.be.a('object');
-                res.body.error.keyValue.should.have.property('title');
-                done();
+              userHelper.authenticateUser('admin', 'admin').then((user) => {
+                const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
+                const cookieHeader = "cryptedToken=" + cryptedCookie;
+                const article2modified = {
+                  title: "Voyage au Japon",
+                }
+                chai.request(app)
+                .put('/api/article/' + savedArticle._id)
+                .set('Cookie', cookieHeader)
+                .send(article2modified)
+                .end((err, res) => {
+                  res.should.have.status(400);
+                  res.body.should.be.a('object');
+                  res.body.should.have.property('error');
+                  res.body.error.should.be.a('object');
+                  res.body.error.should.have.property('keyValue');
+                  res.body.error.keyValue.should.be.a('object');
+                  res.body.error.keyValue.should.have.property('title');
+                  done();
+                });
               });
             });
         });
@@ -531,22 +585,26 @@ describe('Article', () => {
           });
           article2.save()
             .then(savedArticle => {
-              const article2modified = {
-                slug: "tdm-japon",
-              }
-              chai.request(app)
-              .put('/api/article/' + savedArticle._id)
-              .set('Cookie', process.env.AUTH_COOKIE)
-              .send(article2modified)
-              .end((err, res) => {
-                res.should.have.status(400);
-                res.body.should.be.a('object');
-                res.body.should.have.property('error');
-                res.body.error.should.be.a('object');
-                res.body.error.should.have.property('keyValue');
-                res.body.error.keyValue.should.be.a('object');
-                res.body.error.keyValue.should.have.property('slug');
-                done();
+              userHelper.authenticateUser('admin', 'admin').then((user) => {
+                const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
+                const cookieHeader = "cryptedToken=" + cryptedCookie;
+                const article2modified = {
+                  slug: "tdm-japon",
+                }
+                chai.request(app)
+                .put('/api/article/' + savedArticle._id)
+                .set('Cookie', cookieHeader)
+                .send(article2modified)
+                .end((err, res) => {
+                  res.should.have.status(400);
+                  res.body.should.be.a('object');
+                  res.body.should.have.property('error');
+                  res.body.error.should.be.a('object');
+                  res.body.error.should.have.property('keyValue');
+                  res.body.error.keyValue.should.be.a('object');
+                  res.body.error.keyValue.should.have.property('slug');
+                  done();
+                });
               });
             });
         });
@@ -565,18 +623,22 @@ describe('Article', () => {
       });
       article.save()
         .then(() => {
-          const articleModified = {
-            content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-          };
-          chai.request(app)
-          .put('/api/article/12')
-          .set('Cookie', process.env.AUTH_COOKIE)
-          .send(articleModified)
-          .end((err, res) => {
-            res.should.have.status(400);
-            res.body.should.be.a('object');
-            res.body.should.have.property('error');
-            done();
+          userHelper.authenticateUser('admin', 'admin').then((user) => {
+            const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
+            const cookieHeader = "cryptedToken=" + cryptedCookie;
+            const articleModified = {
+              content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+            };
+            chai.request(app)
+            .put('/api/article/12')
+            .set('Cookie', cookieHeader)
+            .send(articleModified)
+            .end((err, res) => {
+              res.should.have.status(400);
+              res.body.should.be.a('object');
+              res.body.should.have.property('error');
+              done();
+            });
           });
         });
     });
@@ -634,14 +696,18 @@ describe('Article', () => {
       });
       article.save()
         .then(savedArticle => {
-          chai.request(app)
-          .delete('/api/article/' + savedArticle._id)
-          .set('Cookie', process.env.AUTH_COOKIE)
-          .end((err, res) => {
-            res.should.have.status(200);
-            res.body.should.be.a('object');
-            res.body.should.have.property('message').eql('Article supprimé');
-            done();
+          userHelper.authenticateUser('admin', 'admin').then((user) => {
+            const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
+            const cookieHeader = "cryptedToken=" + cryptedCookie;
+            chai.request(app)
+            .delete('/api/article/' + savedArticle._id)
+            .set('Cookie', cookieHeader)
+            .end((err, res) => {
+              res.should.have.status(200);
+              res.body.should.be.a('object');
+              res.body.should.have.property('message').eql('Article supprimé');
+              done();
+            });
           });
         });
     });
@@ -659,14 +725,18 @@ describe('Article', () => {
       });
       article.save()
         .then(savedArticle => {
-          chai.request(app)
-          .delete('/api/article/12')
-          .set('Cookie', process.env.AUTH_COOKIE)
-          .end((err, res) => {
-            res.should.have.status(400);
-            res.body.should.be.a('object');
-            res.body.should.have.property('error');
-            done();
+          userHelper.authenticateUser('admin', 'admin').then((user) => {
+            const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
+            const cookieHeader = "cryptedToken=" + cryptedCookie;
+            chai.request(app)
+            .delete('/api/article/12')
+            .set('Cookie', cookieHeader)
+            .end((err, res) => {
+              res.should.have.status(400);
+              res.body.should.be.a('object');
+              res.body.should.have.property('error');
+              done();
+            });
           });
         });
     });
