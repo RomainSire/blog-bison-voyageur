@@ -9,7 +9,8 @@ chai.use(chaiHttp);
 
 const app = require('../src/app')
 const User = require('../src/models/User');
-const userHelper = require('../src/helpers/userHelper')
+const userHelper = require('../src/helpers/userHelper');
+const securityHelper = require('../src/helpers/securityHelper');
 
 describe('User', () => {
   // DELETE EVERYTHING FROM THE TEST DATABASE BEFORE EVERY SINGLE TEST
@@ -147,4 +148,96 @@ describe('User', () => {
       });
     });
   });
+
+
+  /**************************************************************************
+   * Test the PUT /api/auth/username route
+   **************************************************************************/
+  describe('PUT /api/auth/username', () => {
+    it('should update a user\'s username', (done) => {
+      userHelper.generateUserForDB('admin', 'password').then((testUser) => {
+        testUser.save().then(() => {
+          userHelper.authenticateUser('admin', 'password').then((user) => {
+            const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
+            const cookieHeader = "cryptedToken=" + cryptedCookie;
+            const bodyRequest = {
+              newUsername: "John Doe",
+              password: "password"
+            };
+            chai.request(app)
+              .put('/api/auth/username')
+              .set('Cookie', cookieHeader)
+              .send(bodyRequest)
+              .end((err, res) => {
+                res.should.have.status(201);
+                res.body.should.be.a('object');
+                res.body.should.have.property('message').eql('Username modifié');
+                res.body.should.have.property('username').eql(bodyRequest.newUsername);
+                done();
+              });
+          });
+        });
+      });
+    });
+    it('should not update username if password is wrong', (done) => {
+      userHelper.generateUserForDB('admin', 'password').then((testUser) => {
+        testUser.save().then(() => {
+          userHelper.authenticateUser('admin', 'password').then((user) => {
+            const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
+            const cookieHeader = "cryptedToken=" + cryptedCookie;
+            const bodyRequest = {
+              newUsername: "John Doe",
+              password: "badPassword"
+            };
+            chai.request(app)
+              .put('/api/auth/username')
+              .set('Cookie', cookieHeader)
+              .send(bodyRequest)
+              .end((err, res) => {
+                res.should.have.status(401);
+                res.body.should.be.a('object');
+                res.body.should.have.property('error').eql('Mot de passe invalide');
+                done();
+              });
+          });
+        });
+      });
+    });
+    it('should not update username if user is not logged in', (done) => {
+      userHelper.generateUserForDB('admin', 'password').then((testUser) => {
+        testUser.save().then(() => {
+          const bodyRequest = {
+            newUsername: "John Doe",
+            password: "password"
+          };
+          chai.request(app)
+            .put('/api/auth/username')
+            .send(bodyRequest)
+            .end((err, res) => {
+              res.should.have.status(401);
+              res.body.should.be.a('object');
+              res.body.should.have.property('error').eql('Requête non authentifiée');
+              done();
+            });
+        });
+      });
+    });
+  });
+
+
+  /**************************************************************************
+   * Test the PUT /api/auth/password route
+   **************************************************************************/
+  describe('PUT /api/auth/password', () => {
+    it.skip('should update a user\'s password', (done) => {
+      
+    });
+    it.skip('should not update password if oldPassword is wrong', (done) => {
+      
+    });
+    it.skip('should not update username if user is not logged in', (done) => {
+      
+    });
+  });
+
 });
