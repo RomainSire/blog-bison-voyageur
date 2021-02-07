@@ -1,5 +1,3 @@
-const bcrypt = require('bcrypt');
-const cryptojs = require('crypto-js');
 const Cookies = require('cookies');
 
 const User = require('../models/User');
@@ -24,6 +22,7 @@ exports.createFirstUser = async (req, res, next) => {
 
 exports.login = async (req, res ,next) => {
   let user;
+  // authentification de l'utilisateur
   try {
     user = await userHelper.authenticateUser(req.body.username, req.body.password)
   } catch (error) {
@@ -47,8 +46,16 @@ exports.login = async (req, res ,next) => {
   }
 }
 
-exports.changeUsername = (req, res, next) => {
-
+exports.changeUsername = async (req, res, next) => {
+  const userId = userHelper.getUserIdFromCookie(req, res);
+  try {
+    await userHelper.checkPasswordWithUserId(userId, req.body.password);
+  } catch (error) {
+    return res.status(401).json({ error });
+  }
+  User.updateOne({ _id: userId }, { username: req.body.newUsername })
+    .then(() => res.status(201).json({ message: 'Username modifié', username: req.body.newUsername }))
+    .catch(error => res.status(400).json({ error }));
 }
 
 exports.changePassword = (req, res, next) => {
