@@ -50,7 +50,7 @@ exports.changeUsername = async (req, res, next) => {
   try {
     const userId = userHelper.getUserIdFromCookie(req, res);
     await userHelper.checkPasswordWithUserId(userId, req.body.password);
-    User.updateOne({ _id: userId }, { username: req.body.newUsername })
+    User.updateOne({ _id: userId }, { username: req.body.newUsername, modified_at: new Date() })
     .then(() => res.status(201).json({ message: 'Username modifié', username: req.body.newUsername }))
     .catch(error => res.status(400).json({ error }));
   } catch (error) {
@@ -58,6 +58,15 @@ exports.changeUsername = async (req, res, next) => {
   }
 }
 
-exports.changePassword = (req, res, next) => {
-
+exports.changePassword = async (req, res, next) => {
+  try {
+    const userId = userHelper.getUserIdFromCookie(req, res);
+    const oldUser = await userHelper.checkPasswordWithUserId(userId, req.body.oldPassword);
+    const newUser = await userHelper.generateUserForDB(oldUser.username, req.body.newPassword);
+    User.updateOne({ _id: userId }, { hash: newUser.hash, modified_at: new Date() })
+    .then(() => res.status(201).json({ message: 'Mot de passe modifié' }))
+    .catch(error => res.status(400).json({ error }));
+  } catch (error) {
+    return res.status(401).json({ error });
+  }
 }

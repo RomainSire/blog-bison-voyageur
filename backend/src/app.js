@@ -50,7 +50,8 @@ if (process.env.NODE_ENV !== 'test') {
  * ROUTES
  */
 app.use('/images', express.static(path.join(__dirname, '../images')));
-app.use('/api/article', articleRoutes);
 app.use('/api/auth', userRoutes);
+app.use('/api/article', articleRoutes);
+// app.use('/api/pics', picsRoutes);
 
 module.exports = app;
