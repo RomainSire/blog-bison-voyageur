@@ -229,14 +229,72 @@ describe('User', () => {
    * Test the PUT /api/auth/password route
    **************************************************************************/
   describe('PUT /api/auth/password', () => {
-    it.skip('should update a user\'s password', (done) => {
-      
+    it('should update a user\'s password', (done) => {
+      userHelper.generateUserForDB('admin', 'password').then((testUser) => {
+        testUser.save().then(() => {
+          userHelper.authenticateUser('admin', 'password').then((user) => {
+            const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
+            const cookieHeader = "cryptedToken=" + cryptedCookie;
+            const bodyRequest = {
+              newPassword: "secret",
+              oldPassword: "password"
+            };
+            chai.request(app)
+              .put('/api/auth/password')
+              .set('Cookie', cookieHeader)
+              .send(bodyRequest)
+              .end((err, res) => {
+                res.should.have.status(201);
+                res.body.should.be.a('object');
+                res.body.should.have.property('message').eql('Mot de passe modifié');
+                done();
+              });
+          });
+        });
+      });
     });
-    it.skip('should not update password if oldPassword is wrong', (done) => {
-      
+    it('should not update password if oldPassword is wrong', (done) => {
+      userHelper.generateUserForDB('admin', 'password').then((testUser) => {
+        testUser.save().then(() => {
+          userHelper.authenticateUser('admin', 'password').then((user) => {
+            const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
+            const cookieHeader = "cryptedToken=" + cryptedCookie;
+            const bodyRequest = {
+              newPassword: "secret",
+              oldPassword: "wrongPassword"
+            };
+            chai.request(app)
+              .put('/api/auth/password')
+              .set('Cookie', cookieHeader)
+              .send(bodyRequest)
+              .end((err, res) => {
+                res.should.have.status(401);
+                res.body.should.be.a('object');
+                res.body.should.have.property('error').eql('Mot de passe invalide');
+                done();
+              });
+          });
+        });
+      });
     });
-    it.skip('should not update username if user is not logged in', (done) => {
-      
+    it('should not update username if user is not logged in', (done) => {
+      userHelper.generateUserForDB('admin', 'password').then((testUser) => {
+        testUser.save().then(() => {
+          const bodyRequest = {
+            newPassword: "secret",
+              oldPassword: "password"
+          };
+          chai.request(app)
+            .put('/api/auth/password')
+            .send(bodyRequest)
+            .end((err, res) => {
+              res.should.have.status(401);
+              res.body.should.be.a('object');
+              res.body.should.have.property('error').eql('Requête non authentifiée');
+              done();
+            });
+        });
+      });
     });
   });
 
