@@ -3,9 +3,10 @@ const router = express.Router();
 
 const userCtrl = require('../controllers/user');
 const auth = require('../middlewares/auth');
+const validate = require('../middlewares/validate');
 
 router.get('/firstuser', userCtrl.createFirstUser);
-router.post('/login', userCtrl.login);
+router.post('/login', validate.loginUser, userCtrl.login);
 router.put('/username', auth, userCtrl.changeUsername);
 router.put('/password', auth, userCtrl.changePassword);
 

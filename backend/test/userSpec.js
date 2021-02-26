@@ -109,7 +109,7 @@ describe('User', () => {
         });
       });
     });
-    it('should not connect if username is wrong', (done) => {
+    it('should not connect if username doesn\'t match the one in DB', (done) => {
       userHelper.generateUserForDB('admin', 'password').then((user) => {
         user.save().then(() => {
           const credential = {
@@ -128,7 +128,7 @@ describe('User', () => {
         });
       });
     });
-    it('should not connect if password is wrong', (done) => {
+    it('should not connect if password doesn\'t match the one in DB', (done) => {
       userHelper.generateUserForDB('admin', 'password').then((user) => {
         user.save().then(() => {
           const credential = {
@@ -142,6 +142,120 @@ describe('User', () => {
               res.should.have.status(401);
               res.body.should.be.a('object');
               res.body.should.have.property('error').eql('Mot de passe invalide');
+              done();
+            });
+        });
+      });
+    });
+    it('should not connect if username is not a string', (done) => {
+      userHelper.generateUserForDB('admin', 'password').then((user) => {
+        user.save().then(() => {
+          const credential = {
+            username: 12,
+            password: 'password'
+          };
+          chai.request(app)
+            .post('/api/auth/login')
+            .send(credential)
+            .end((err, res) => {
+              res.should.have.status(422);
+              res.body.should.be.a('object');
+              res.body.should.have.property('error').eql('Données saisies invalides');
+              done();
+            });
+        });
+      });
+    });
+    it('should not connect if username is not long enough', (done) => {
+      userHelper.generateUserForDB('admin', 'password').then((user) => {
+        user.save().then(() => {
+          const credential = {
+            username: 'Jo',
+            password: 'password'
+          };
+          chai.request(app)
+            .post('/api/auth/login')
+            .send(credential)
+            .end((err, res) => {
+              res.should.have.status(422);
+              res.body.should.be.a('object');
+              res.body.should.have.property('error').eql('Données saisies invalides');
+              done();
+            });
+        });
+      });
+    });
+    it('should not connect if username has special character', (done) => {
+      userHelper.generateUserForDB('admin', 'password').then((user) => {
+        user.save().then(() => {
+          const credential = {
+            username: 'admin#',
+            password: 'password'
+          };
+          chai.request(app)
+            .post('/api/auth/login')
+            .send(credential)
+            .end((err, res) => {
+              res.should.have.status(422);
+              res.body.should.be.a('object');
+              res.body.should.have.property('error').eql('Données saisies invalides');
+              done();
+            });
+        });
+      });
+    });
+    it('should not connect if password is not a string', (done) => {
+      userHelper.generateUserForDB('admin', 'password').then((user) => {
+        user.save().then(() => {
+          const credential = {
+            username: 'admin',
+            password: 12
+          };
+          chai.request(app)
+            .post('/api/auth/login')
+            .send(credential)
+            .end((err, res) => {
+              res.should.have.status(422);
+              res.body.should.be.a('object');
+              res.body.should.have.property('error').eql('Données saisies invalides');
+              done();
+            });
+        });
+      });
+    });
+    it('should not connect if password is too short', (done) => {
+      userHelper.generateUserForDB('admin', 'password').then((user) => {
+        user.save().then(() => {
+          const credential = {
+            username: 'admin',
+            password: 'pass'
+          };
+          chai.request(app)
+            .post('/api/auth/login')
+            .send(credential)
+            .end((err, res) => {
+              res.should.have.status(422);
+              res.body.should.be.a('object');
+              res.body.should.have.property('error').eql('Données saisies invalides');
+              done();
+            });
+        });
+      });
+    });
+    it('should not connect if password has unallowed special character', (done) => {
+      userHelper.generateUserForDB('admin', 'password').then((user) => {
+        user.save().then(() => {
+          const credential = {
+            username: 'admin',
+            password: 'password//'
+          };
+          chai.request(app)
+            .post('/api/auth/login')
+            .send(credential)
+            .end((err, res) => {
+              res.should.have.status(422);
+              res.body.should.be.a('object');
+              res.body.should.have.property('error').eql('Données saisies invalides');
               done();
             });
         });
