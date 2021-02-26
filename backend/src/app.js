@@ -9,6 +9,7 @@ const fs = require('fs');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
+const rateLimit = require("express-rate-limit");
 
 // import routes
 const articleRoutes = require('./routes/article');
@@ -36,15 +37,21 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Credentials', true);
   next();
 });
-// BODY-PARSER: Parse le body des requetes en json
-app.use(bodyParser.json());
 // HELMET: Sécurisation des headers
 app.use(helmet());
+// Express Rate Limit
+const limiter = rateLimit({
+  windowMs: 60000, // 1 minute
+  max: 60 // limit each IP to 60 requests per windowMs
+});
+app.use(limiter);
 // MORGAN: Log toutes les requêtes passées au serveur (Désactivé lors des tests)
 if (process.env.NODE_ENV !== 'test') {
   const accessLogStream = fs.createWriteStream(path.join(__dirname, '../access.log'), { flags: 'a' });
   app.use(morgan('combined', { stream: accessLogStream }));
 }
+// BODY-PARSER: Parse le body des requetes en json
+app.use(bodyParser.json());
 
 /**
  * ROUTES
