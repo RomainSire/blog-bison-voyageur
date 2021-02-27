@@ -9,7 +9,7 @@ However now, I learned how to code, and I want to develop my own small blog CMS 
 
 - Node.Js/Express REST API as a backend
 - MongoDB as database
-- Single page application (still not sure: improve my skills with Angular or Vue... or learn React or Svelte..! So many choices!!)
+- Single page application (Probably with Angular)
 
 ## Features
 
@@ -30,5 +30,5 @@ However now, I learned how to code, and I want to develop my own small blog CMS 
 
 ## Testing
 
-- TDD! I've never used Test Driven Development... but I'd like to learn!
+- Fully tested : backend and frontent !
 - Mocha & Chai for the backend tests
