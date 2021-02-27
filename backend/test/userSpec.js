@@ -463,7 +463,7 @@ describe('User', () => {
         });
       });
     });
-    it('should not update username if user is not logged in', (done) => {
+    it('should not update password if user is not logged in', (done) => {
       userHelper.generateUserForDB('admin', 'password').then((testUser) => {
         testUser.save().then(() => {
           const bodyRequest = {
@@ -482,75 +482,75 @@ describe('User', () => {
         });
       });
     });
-  });
-  it('should not update password if new password is not a string', (done) => {
-    userHelper.generateUserForDB('admin', 'password').then((testUser) => {
-      testUser.save().then(() => {
-        userHelper.authenticateUser('admin', 'password').then((user) => {
-          const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
-          const cookieHeader = "cryptedToken=" + cryptedCookie;
-          const bodyRequest = {
-            newPassword: 12,
-            oldPassword: "password"
-          };
-          chai.request(app)
-            .put('/api/auth/password')
-            .set('Cookie', cookieHeader)
-            .send(bodyRequest)
-            .end((err, res) => {
-              res.should.have.status(422);
-              res.body.should.be.a('object');
-              res.body.should.have.property('error').eql('Données saisies invalides');
-              done();
-            });
+    it('should not update password if new password is not a string', (done) => {
+      userHelper.generateUserForDB('admin', 'password').then((testUser) => {
+        testUser.save().then(() => {
+          userHelper.authenticateUser('admin', 'password').then((user) => {
+            const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
+            const cookieHeader = "cryptedToken=" + cryptedCookie;
+            const bodyRequest = {
+              newPassword: 12,
+              oldPassword: "password"
+            };
+            chai.request(app)
+              .put('/api/auth/password')
+              .set('Cookie', cookieHeader)
+              .send(bodyRequest)
+              .end((err, res) => {
+                res.should.have.status(422);
+                res.body.should.be.a('object');
+                res.body.should.have.property('error').eql('Données saisies invalides');
+                done();
+              });
+          });
         });
       });
     });
-  });
-  it('should not update password if new password is not long enough', (done) => {
-    userHelper.generateUserForDB('admin', 'password').then((testUser) => {
-      testUser.save().then(() => {
-        userHelper.authenticateUser('admin', 'password').then((user) => {
-          const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
-          const cookieHeader = "cryptedToken=" + cryptedCookie;
-          const bodyRequest = {
-            newPassword: "123",
-            oldPassword: "password"
-          };
-          chai.request(app)
-            .put('/api/auth/password')
-            .set('Cookie', cookieHeader)
-            .send(bodyRequest)
-            .end((err, res) => {
-              res.should.have.status(422);
-              res.body.should.be.a('object');
-              res.body.should.have.property('error').eql('Données saisies invalides');
-              done();
-            });
+    it('should not update password if new password is not long enough', (done) => {
+      userHelper.generateUserForDB('admin', 'password').then((testUser) => {
+        testUser.save().then(() => {
+          userHelper.authenticateUser('admin', 'password').then((user) => {
+            const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
+            const cookieHeader = "cryptedToken=" + cryptedCookie;
+            const bodyRequest = {
+              newPassword: "123",
+              oldPassword: "password"
+            };
+            chai.request(app)
+              .put('/api/auth/password')
+              .set('Cookie', cookieHeader)
+              .send(bodyRequest)
+              .end((err, res) => {
+                res.should.have.status(422);
+                res.body.should.be.a('object');
+                res.body.should.have.property('error').eql('Données saisies invalides');
+                done();
+              });
+          });
         });
       });
     });
-  });
-  it('should not update password if new password have unalowed special char', (done) => {
-    userHelper.generateUserForDB('admin', 'password').then((testUser) => {
-      testUser.save().then(() => {
-        userHelper.authenticateUser('admin', 'password').then((user) => {
-          const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
-          const cookieHeader = "cryptedToken=" + cryptedCookie;
-          const bodyRequest = {
-            newPassword: "secret/",
-            oldPassword: "password"
-          };
-          chai.request(app)
-            .put('/api/auth/password')
-            .set('Cookie', cookieHeader)
-            .send(bodyRequest)
-            .end((err, res) => {
-              res.should.have.status(422);
-              res.body.should.be.a('object');
-              res.body.should.have.property('error').eql('Données saisies invalides');
-              done();
-            });
+    it('should not update password if new password have unalowed special char', (done) => {
+      userHelper.generateUserForDB('admin', 'password').then((testUser) => {
+        testUser.save().then(() => {
+          userHelper.authenticateUser('admin', 'password').then((user) => {
+            const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
+            const cookieHeader = "cryptedToken=" + cryptedCookie;
+            const bodyRequest = {
+              newPassword: "secret/",
+              oldPassword: "password"
+            };
+            chai.request(app)
+              .put('/api/auth/password')
+              .set('Cookie', cookieHeader)
+              .send(bodyRequest)
+              .end((err, res) => {
+                res.should.have.status(422);
+                res.body.should.be.a('object');
+                res.body.should.have.property('error').eql('Données saisies invalides');
+                done();
+              });
+          });
         });
       });
     });

@@ -1,12 +1,12 @@
 const Joi = require('joi');
 
 /**
- * Validation des données utilisateur
+ * User's input validation of User's routes
  */
 // Username: letters, numbers and whiitespace, between 5 and 50 characters
-const usernameSchema = Joi.string().trim().required().pattern(/^[a-zA-Z0-9\s]{5,50}$/);
 // Password: letters, numbers, whiitespace, and some special chars, between 5 and 50 characters.
 // NO password strength requirements for the password, since the only user will be myself and it WILL be strong!
+const usernameSchema = Joi.string().trim().required().pattern(/^[a-zA-Z0-9\s]{5,50}$/);
 const passwordSchema = Joi.string().trim().required().pattern(/^[a-zA-Z0-9-_@$!%*#\s]{5,50}$/);
 
 // Login route
@@ -44,6 +44,35 @@ const changePasswordScheme = Joi.object({
 });
 exports.changePassword = (req, res, next) => {
   const {error, value} = changePasswordScheme.validate(req.body);
+  if (error) {
+    res.status(422).json({ error: "Données saisies invalides" });
+  } else {
+    next();
+  }
+};
+
+
+/**
+ * User's input validation of Article's routes
+ */
+const titleSchema = Joi.string().trim().required().min(4).max(250);
+const slugSchema = Joi.string().trim().required().pattern(/^[a-z0-9-]{4,250}$/);
+const image_idSchema = Joi.number().integer().positive();
+const descriptionSchema = Joi.string().trim().max(250);
+const contentSchema = Joi.string().trim();
+const isdraftSchema = Joi.boolean().required();
+
+// post new article route
+const addNewArticleSchema = Joi.object({
+  title: titleSchema,
+  slug: slugSchema,
+  image_id: image_idSchema,
+  description: descriptionSchema,
+  content: contentSchema,
+  isdraft: isdraftSchema
+});
+exports.addNewArticle = (req, res, next) => {
+  const {error, value} = addNewArticleSchema.validate(req.body);
   if (error) {
     res.status(422).json({ error: "Données saisies invalides" });
   } else {

@@ -56,12 +56,9 @@ describe('Article', () => {
           .set('Cookie', cookieHeader)
           .send(article)
           .end((err, res) => {
-            res.should.have.status(400);
+            res.should.have.status(422);
             res.body.should.be.a('object');
-            res.body.should.have.property('error');
-            res.body.error.should.have.property('errors');
-            res.body.error.errors.should.have.property('title');
-            res.body.error.errors.title.should.have.property('kind').eql('required');
+            res.body.should.have.property('error').eql('Données saisies invalides');
             done();
           });
       })
@@ -83,12 +80,59 @@ describe('Article', () => {
           .set('Cookie', cookieHeader)
           .send(article)
           .end((err, res) => {
-            res.should.have.status(400);
+            res.should.have.status(422);
             res.body.should.be.a('object');
-            res.body.should.have.property('error');
-            res.body.error.should.have.property('errors');
-            res.body.error.errors.should.have.property('slug');
-            res.body.error.errors.slug.should.have.property('kind').eql('required');
+            res.body.should.have.property('error').eql('Données saisies invalides');
+            done();
+          });
+      });
+    });
+    it('should not POST an article if whitespace in "slug"', (done) => {
+      userHelper.authenticateUser('admin', 'admin').then((user) => {
+        const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
+        const cookieHeader = "cryptedToken=" + cryptedCookie;
+
+        const article = {
+          title: "Voyage au Japon",
+          slug: "tdm japon",
+          image_id: 2,
+          description: "Une courte description de l'article",
+          content: "Le contenu super intéressant de l'article : ce voyage était hyper stylé, on s'est régalée :)",
+          isdraft: false
+        };
+        chai.request(app)
+          .post('/api/article')
+          .set('Cookie', cookieHeader)
+          .send(article)
+          .end((err, res) => {
+            res.should.have.status(422);
+            res.body.should.be.a('object');
+            res.body.should.have.property('error').eql('Données saisies invalides');
+            done();
+          });
+      });
+    });
+    it('should not POST an article if special character in "slug"', (done) => {
+      userHelper.authenticateUser('admin', 'admin').then((user) => {
+        const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
+        const cookieHeader = "cryptedToken=" + cryptedCookie;
+
+        const article = {
+          title: "Voyage au Japon",
+          slug: "tdm_japon",
+          image_id: 2,
+          description: "Une courte description de l'article",
+          content: "Le contenu super intéressant de l'article : ce voyage était hyper stylé, on s'est régalée :)",
+          isdraft: false
+        };
+        chai.request(app)
+          .post('/api/article')
+          .set('Cookie', cookieHeader)
+          .send(article)
+          .end((err, res) => {
+            res.should.have.status(422);
+            res.body.should.be.a('object');
+            res.body.should.have.property('error').eql('Données saisies invalides');
             done();
           });
       });
@@ -109,12 +153,9 @@ describe('Article', () => {
           .set('Cookie', cookieHeader)
           .send(article)
           .end((err, res) => {
-            res.should.have.status(400);
+            res.should.have.status(422);
             res.body.should.be.a('object');
-            res.body.should.have.property('error');
-            res.body.error.should.have.property('errors');
-            res.body.error.errors.should.have.property('isdraft');
-            res.body.error.errors.isdraft.should.have.property('kind').eql('required');
+            res.body.should.have.property('error').eql('Données saisies invalides');
             done();
           });
       });
