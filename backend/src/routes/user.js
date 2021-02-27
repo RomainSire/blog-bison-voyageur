@@ -7,7 +7,7 @@ const validate = require('../middlewares/validate');
 
 router.get('/firstuser', userCtrl.createFirstUser);
 router.post('/login', validate.loginUser, userCtrl.login);
-router.put('/username', auth, userCtrl.changeUsername);
-router.put('/password', auth, userCtrl.changePassword);
+router.put('/username', auth, validate.changeUsername, userCtrl.changeUsername);
+router.put('/password', auth, validate.changePassword, userCtrl.changePassword);
 
 module.exports = router;
