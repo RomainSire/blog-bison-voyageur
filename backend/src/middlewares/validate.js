@@ -1,5 +1,19 @@
 const Joi = require('joi');
 
+
+
+// Check if an id sent in url parameter is ok
+const idSchema = Joi.string().length(24).required();
+exports.id = (req, res, next) => {
+  const {error, value} = idSchema.validate(req.params.id);
+  if (error) {
+      res.status(422).json({ error: "id invalide" });
+  } else {
+      next();
+  } 
+}
+
+
 /**
  * User's input validation of User's routes
  */
@@ -62,7 +76,7 @@ const descriptionSchema = Joi.string().trim().max(250);
 const contentSchema = Joi.string().trim();
 const isdraftSchema = Joi.boolean().required();
 
-// post new article route
+// validate article format article route
 const addNewArticleSchema = Joi.object({
   title: titleSchema,
   slug: slugSchema,
@@ -71,7 +85,7 @@ const addNewArticleSchema = Joi.object({
   content: contentSchema,
   isdraft: isdraftSchema
 });
-exports.addNewArticle = (req, res, next) => {
+exports.article = (req, res, next) => {
   const {error, value} = addNewArticleSchema.validate(req.body);
   if (error) {
     res.status(422).json({ error: "Données saisies invalides" });

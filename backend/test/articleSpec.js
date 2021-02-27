@@ -535,7 +535,10 @@ describe('Article', () => {
             const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
             const cookieHeader = "cryptedToken=" + cryptedCookie;
             const articleModified = {
-              content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vestibulum a urna quis elementum. Aliquam ullamcorper, massa vel rutrum semper, ex tellus maximus arcu, ut convallis nibh erat id risus. Proin a mi nisi. Phasellus vel elit vel odio commodo fermentum at ullamcorper sapien. Duis nunc diam, iaculis ut tempor eu, gravida ut odio. Vestibulum cursus dolor sed maximus ultrices. Maecenas vehicula convallis neque, ut iaculis odio volutpat ut. Phasellus dapibus egestas nibh, eget imperdiet diam sodales at. Nam eget velit non augue tristique sagittis ac ac orci."
+              title: "Voyage au Japon",
+              slug: "tdm-japon",
+              content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vestibulum a urna quis elementum. Aliquam ullamcorper, massa vel rutrum semper, ex tellus maximus arcu, ut convallis nibh erat id risus. Proin a mi nisi. Phasellus vel elit vel odio commodo fermentum at ullamcorper sapien. Duis nunc diam, iaculis ut tempor eu, gravida ut odio. Vestibulum cursus dolor sed maximus ultrices. Maecenas vehicula convallis neque, ut iaculis odio volutpat ut. Phasellus dapibus egestas nibh, eget imperdiet diam sodales at. Nam eget velit non augue tristique sagittis ac ac orci.",
+              isdraft: true,
             };
             chai.request(app)
             .put('/api/article/' + savedArticle._id)
@@ -581,6 +584,8 @@ describe('Article', () => {
                 const cookieHeader = "cryptedToken=" + cryptedCookie;
                 const article2modified = {
                   title: "Voyage au Japon",
+                  slug: "tdm-perou",
+                  isdraft: true,
                 }
                 chai.request(app)
                 .put('/api/article/' + savedArticle._id)
@@ -630,7 +635,9 @@ describe('Article', () => {
                 const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
                 const cookieHeader = "cryptedToken=" + cryptedCookie;
                 const article2modified = {
+                  title: "Voyage au Pérou",
                   slug: "tdm-japon",
+                  isdraft: true,
                 }
                 chai.request(app)
                 .put('/api/article/' + savedArticle._id)
@@ -668,16 +675,19 @@ describe('Article', () => {
             const cryptedCookie = securityHelper.createCryptedJWTCookie(user._id);
             const cookieHeader = "cryptedToken=" + cryptedCookie;
             const articleModified = {
-              content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+              title: "Voyage au Japon",
+              slug: "tdm-japon",
+              content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+              isdraft: true,
             };
             chai.request(app)
             .put('/api/article/12')
             .set('Cookie', cookieHeader)
             .send(articleModified)
             .end((err, res) => {
-              res.should.have.status(400);
+              res.should.have.status(422);
               res.body.should.be.a('object');
-              res.body.should.have.property('error');
+              res.body.should.have.property('error').eql('id invalide');
               done();
             });
           });
@@ -773,9 +783,9 @@ describe('Article', () => {
             .delete('/api/article/12')
             .set('Cookie', cookieHeader)
             .end((err, res) => {
-              res.should.have.status(400);
+              res.should.have.status(422);
               res.body.should.be.a('object');
-              res.body.should.have.property('error');
+              res.body.should.have.property('error').eql('id invalide');
               done();
             });
           });
